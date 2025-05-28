@@ -1,67 +1,48 @@
+# JCU Gym Management System - CP3407 Project 2025
 
-How to edit this: test-2025
-* Option-1 (tested and worked ok): PyCharm supports editing of these .md files. Then you need to push to the main branch or make a pull request.
-* Option-2 (tested ok): Edit and commit it directly on github. Then any local repo copies will need to be "updated".
+## Project Overview
+This project is a web app to help manage the JCU Gym smoothly. It serves two main users:
 
-# cp3407-project-v2024 template [Delete or change to your team/project name before submitting]
+- **Gym Users:**  
+  - Easily register online  
+  - Book gym sessions quickly  
 
-This a project assignment template for CP3407. 
-The following is the list of items, which are required to be completed.
+- **Administrators:**  
+  - Track user registrations  
+  - See gym usage reports to improve management  
 
-## How to submit [You may delete this before submitting]
+Our main goals are to build a secure and easy-to-use system with reliable cloud storage. We also plan to add cool features like a virtual gym tour and an AI trainer to give users personalized workout advice.
 
-2. Add your instructor (JCU-Australia: jc138691@gmail.com Dmitry Konovalov) as a team member to view your project on github
-1. Submit link to your repository
-2. Download your github repository as a zip file and submit via LearnJCU.
+---
 
-## Team
+## Team Members (Practical B Group 6)
 
-It is recommended to complete this assignment in a group of 2-4 students.
-1. Student 1
-2. Student name 2
-3. Name 3
-4. Name 4
+1. Sai Ohm Saie Paine
+2. Linn Thant Soe Wai
+3. Hlyan Wint Aung   
 
+---
 
-# Project planning BEFORE iteration-1, (see chapters 1-3)
-Checklist/TODOs: 
-* Update the following during each week prac session
-* github entry timestamp is BEFORE the iteration-1
-* User stories are correct: see p39
-* Must have more user stories than fits into iterations 1 and 2. To practice the priority.
-* [user story title](./user_stories/user_story_01_title.md), priority XX, YY days 
-* ...
+## Project planning BEFORE iteration-1, (see chapters 1-3)
 
-Total: YY days
+## Checklist / TODOs
+
+- ✅  Update the following during each week prac session
+- ✅  GitHub's entry timestamp is **BEFORE** the iteration-1
+- (Pending) Review and confirm all user stories are correct  
+- (Pending) Add more user stories than can fit in Iterations 1 and 2 to practice prioritization  
 
 
-## Iteration 1 [duration 3-4 weeks], add your start and end dates 
+### What We Focus On
+- Simple and clear interface for easy navigation  
+- Secure login to protect user info  
+- Cloud storage (like AWS) for safe and fast data handling  
+- Tools for gym providers to manage bookings and track earnings  
 
-* Goal is to have 2 iterations during a trimester of teaching.
-* Update the following during each week prac session
-* During pracs, you may experiment with using other github ways of tracking changes, e.g. via pull requests.
-
-1. [user story title](./user_stories/user_story_01_title.md), priority XX, YY days 
-2. ...
-
-Total: YY days
-
-
-### Iteration 2 [duration 3-4 weeks], add your start and end dates
-Goal is to have 2 iterations during a trimester of teaching.
-1. [user story title](./user_stories/user_story_01_title.md), priority XX, YY days 
-2. ...
-
-Total: YY days
-
-### Not enough time/developers: 
-1. [user story title](./user_stories/user_story_01_title.md), priority XX, YY days 
-2. ...
-
-Total: YY days
-
-# Actual iterations
-1. [Iteration-1](./iteration_1.md)
-2. [Iteration-2](./iteration_2.md)
+### Who Does What
+- Frontend: Sai Ohm Saie Paine, Hylan Wint Aung
+- Backend: Linn Thant Soe Wai
 
 
+### Timeline
+- Total time planned: 7 days  
