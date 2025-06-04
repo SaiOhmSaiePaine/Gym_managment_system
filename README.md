@@ -13,6 +13,9 @@ This project is a web application designed to help students and staff manage los
 
 Our main goals are to build a secure, user-friendly, and reliable system utilizing cloud storage for item images and a robust database for item information.
 
+## Project Goal
+* Our goal is to build a simple Lost and Found website for our school. When someone finds a lost item, they bring it to the Lost and Found Center. The staff will take a photo of the item and upload it to the website.This way, students who lose something can easily check the website to see if their item has been found.
+
 ## Team Members (Practical B Group 6)
 
 * Sai Ohm Saie Paine
@@ -53,6 +56,3 @@ Our main goals are to build a secure, user-friendly, and reliable system utilizi
 ## Timeline
 
 * **Total time planned:** 7 days
-
-## Project Goal
-* Our goal is to build a simple Lost and Found website for our school. When someone finds a lost item, they bring it to the Lost and Found Center. The staff will take a photo of the item and upload it to the website.This way, students who lose something can easily check the website to see if their item has been found.
