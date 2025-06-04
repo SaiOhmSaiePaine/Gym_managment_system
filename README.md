@@ -38,7 +38,7 @@ Our main goals are to build a secure, user-friendly, and reliable system utilizi
 
 ## Who Does What
 
-* **Frontend:** Sai Ohm Saie Paine, Hylan Wint Aung
+* **Frontend:** Sai Ohm Saie Paine, Hlyan Wint Aung
 * **Backend:** Linn Thant Soe Wai
 
 ## Tech Stack
@@ -53,3 +53,6 @@ Our main goals are to build a secure, user-friendly, and reliable system utilizi
 ## Timeline
 
 * **Total time planned:** 7 days
+
+## Project Goal
+* Our goal is to build a simple Lost and Found website for our school. When someone finds a lost item, they bring it to the Lost and Found Center. The staff will take a photo of the item and upload it to the website.This way, students who lose something can easily check the website to see if their item has been found.
