@@ -28,8 +28,8 @@ Our main goals are to build a secure, user-friendly, and reliable system utilizi
 
 * ✅ Update the following during each weekly prac session
 * ✅ GitHub's entry timestamp is BEFORE the iteration-1
-* (Pending) Review and confirm all user stories for the Lost & Found system are correct.
-* (Pending) Add more user stories than can fit in Iterations 1 and 2 to practice prioritization (e.g., user notifications, advanced search, direct messaging between finder/seeker, item expiry/disposal tracking).
+* ✅ Review and confirm all user stories for the Lost & Found system are correct.
+* ✅ Add more user stories than can fit in Iterations 1 and 2 to practice prioritization (e.g., user notifications, advanced search, direct messaging between finder/seeker, item expiry/disposal tracking).
 
 ## What We Focus On
 
