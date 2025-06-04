@@ -53,6 +53,20 @@ Our main goals are to build a secure, user-friendly, and reliable system utilizi
 * **Authentication:** JWT-based
 * **Deployment:** Docker, AWS Elastic Beanstalk
 
-## Timeline
+### Iteration 1 [3-4 Weeks] (Start: DD/MM/YYYY - End: DD/MM/YYYY)
+**Goals:** Implement core functionalities for users to post found items, and for anyone to browse, search, and filter these items. This will establish the basic public-facing features of the system.
 
-* **Total time planned:** 7 days
+**User Stories for Iteration 1:**
+
+- **Post a Found Item** | Priority: High / 1 | Estimate: 4 days
+  - *Description*: As a registered campus member (student or staff), I want to be able to easily post details of an item I have found on campus, including its name, a description, a picture, where I found it (block and level), and how I am currently keeping the item. This will help others who have lost items to find them. *(Note: This story implies user registration/login might be needed, or it's posted by an 'anonymous' or pre-defined admin if user auth is in Iteration 2)*
+
+- **View and Search Found Items** | Priority: High / 2 | Estimate: 4 days
+  - *Description*: As a campus member, I want to be able to view a list of all recently found items and search/filter this list so that I can try to find an item I have lost.
+
+- **Filter Found Items by Status** | Priority: Medium / 4 | Estimate: 2 days
+  - *Description*: As a campus member looking for a lost item, I want to be able to filter the list of found items based on how the item is being kept (e.g., "Sent to One Stop Center") so I can more efficiently search in relevant places or for items I can directly inquire about.
+
+**Total estimated effort for Iteration 1:** 10 days (assuming 1 day = 5 production hours)
+
+---
