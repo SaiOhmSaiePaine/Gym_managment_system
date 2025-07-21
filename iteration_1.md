@@ -19,6 +19,13 @@
 
 ### 🔖 User Stories and Tasks:
 
+---
+
+### 🚧 In Progress:
+
+---
+
+### ✅ Completed:
 1. **[Post a Found Item](./user_stories/user_story_post_found_item.md)**  
    *Priority:* High (1), *Estimate:* 4 days  
    **Tasks:**
@@ -43,24 +50,10 @@
 
 ---
 
-### 🚧 In Progress:
-- Task 1.1 – Sai (Started: 11/06/2025)  
-- Task 2.2 – Linn (Started: 12/06/2025)  
-- Task 3.1 – Sai (Started: 13/06/2025)
-
----
-
-### ✅ Completed:
-- Task 1.2 – Linn (Completed: 14/06/2025)
-
----
-
 ### 📉 Burn Down for iteration-1:
 - 4 weeks left: 10 days of estimated work remaining  
-- 3 weeks left: *TBD*  
-- 2 weeks left: *TBD*  
-- 1 week left: *TBD*  
-- 0 weeks left: *TBD*  
-- **Actual Velocity:** *TBD – iteration in progress*
-
-📝 We are just starting Iteration 1. As tasks are completed, we will update this chart weekly to reflect actual progress.
+- 3 weeks left: 6 days of estimated work remaining 
+- 2 weeks left: 4 days of estimated work remaining  
+- 1 week left: 2 days of estimated work remaining  
+- 0 weeks left: 0 days of estimated work remaining 
+- **Actual Velocity:** 10
