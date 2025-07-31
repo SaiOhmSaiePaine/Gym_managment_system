@@ -18,6 +18,9 @@
 ---
 
 ### 🔖 User Stories and Tasks:
+1. **[Post a Found Item](./user_stories/user_story_post_found_item.md)** *Priority:* High (1), *Estimate:* 4 days
+2. **[View and Search Found Items](./user_stories/user_story_view_search_items.md)** *Priority:* High (2), *Estimate:* 4 days
+3. **[Filter Found Items by Status](./user_stories/user_story_filter_items.md)** *Priority:* Medium (4), *Estimate:* 2 days
 
 ---
 
@@ -29,24 +32,24 @@
 1. **[Post a Found Item](./user_stories/user_story_post_found_item.md)**  
    *Priority:* High (1), *Estimate:* 4 days  
    **Tasks:**
-   - Task 1.1 – Design UI form for posting item (Sai)
-   - Task 1.2 – Implement API to handle post requests (Linn)
-   - Task 1.3 – Connect form to backend API (Hlyan)
-   - Task 1.4 – Upload item photo to AWS S3 (Linn)
+   - Task 1.1 – Design UI form for posting item
+   - Task 1.2 – Implement API to handle post requests
+   - Task 1.3 – Connect form to backend API
+   - Task 1.4 – Upload item photo to AWS S3
 
 2. **[View and Search Found Items](./user_stories/user_story_view_search_items.md)**  
    *Priority:* High (2), *Estimate:* 4 days  
    **Tasks:**
-   - Task 2.1 – Create item listing UI (Sai)
-   - Task 2.2 – Backend API to retrieve and search items (Linn)
-   - Task 2.3 – Connect listing UI with backend (Hlyan)
+   - Task 2.1 – Create item listing UI
+   - Task 2.2 – Backend API to retrieve and search items
+   - Task 2.3 – Connect listing UI with backend
 
 3. **[Filter Found Items by Status](./user_stories/user_story_filter_items.md)**  
    *Priority:* Medium (4), *Estimate:* 2 days  
    **Tasks:**
-   - Task 3.1 – Add filter dropdown component (Sai)
-   - Task 3.2 – Modify API to support filter query (Linn)
-   - Task 3.3 – Integrate filter with item list (Hlyan)
+   - Task 3.1 – Add filter dropdown component
+   - Task 3.2 – Modify API to support filter query
+   - Task 3.3 – Integrate filter with item list
 
 ---
 
