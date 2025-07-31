@@ -1,4 +1,4 @@
-# Actual iteration-2 board (see chapters 3 and 4)
+# Iteration-2 board
 
 **Start Date:** 02/07/2025  
 **End Date:** 23/07/2025  
@@ -20,10 +20,10 @@
 ### User Stories and Tasks:
 
 1. **[User Authentication (JWT-based)](./user_stories/user_story_user_authentication.md)** *Priority:* High (1), *Estimate:* 3 days  
-2. **[Admin Login and Dashboard](./user_stories/user_story_admin_login_dashboard.md)** *Priority:* High (2), *Estimate:* 3 days  
-3. **[Mark Item as Returned](./user_stories/user_story_mark_item_returned.md)** *Priority:* Medium (3), *Estimate:* 2 days  
-4. **[Upload Item Image to AWS S3](./user_stories/user_story_aws_s3_upload.md)** *Priority:* Medium (4), *Estimate:* 2 days  
-5. **[Connect and Store Data on DigitalOcean PostgreSQL](./user_stories/user_story_digitalocean_storage.md)** *Priority:* Medium (5), *Estimate:* 2 days
+2. **[Admin Login and Dashboard](./user_stories/user_story_admin_login_dashboard.md)** *Priority:* High (2), *Estimate:* 2 days
+3. **[Connect and Store Data on DigitalOcean PostgreSQL](./user_stories/user_story_digitalocean_storage.md)** *Priority:* High (3), *Estimate:* 3 days 
+4. **[Mark Item as Returned](./user_stories/user_story_mark_item_returned.md)** *Priority:* Medium (4), *Estimate:* 2 days  
+5. **[Upload Item Image to AWS S3](./user_stories/user_story_aws_s3_upload.md)** *Priority:* Medium (5), *Estimate:* 2 days  
 
 ---
 
@@ -41,33 +41,33 @@
    - Task 1.3 – Store and validate tokens on frontend with session state
 
 2. **[Admin Login and Dashboard](./user_stories/user_story_admin_login_dashboard.md)**  
-   *Priority:* High (2), *Estimate:* 3 days  
+   *Priority:* High (2), *Estimate:* 2 days  
    **Tasks:**
    - Task 2.1 – Create secure admin login page with Material-UI
    - Task 2.2 – Build admin dashboard layout with real-time statistics
    - Task 2.3 – Integrate dashboard API and authenticate with admin role
-
-3. **[Mark Item as Returned](./user_stories/user_story_mark_item_returned.md)**  
-   *Priority:* Medium (3), *Estimate:* 2 days  
+  
+3. **[Connect and Store Data on DigitalOcean PostgreSQL](./user_stories/user_story_digitalocean_storage.md)**  
+   *Priority:* High (3), *Estimate:* 3 days  
    **Tasks:**
-   - Task 3.1 – Add “Mark as Returned” button to admin item view
-   - Task 3.2 – Update item status in database on click
-   - Task 3.3 – Hide returned items from public user list
+   - Task 3.1 – Provision managed PostgreSQL instance on DigitalOcean
+   - Task 3.2 – Configure backend to connect using secured credentials
+   - Task 3.3 – Migrate existing schema and test database operations
 
-4. **[Upload Item Image to AWS S3](./user_stories/user_story_aws_s3_upload.md)**  
+4. **[Mark Item as Returned](./user_stories/user_story_mark_item_returned.md)**  
    *Priority:* Medium (4), *Estimate:* 2 days  
    **Tasks:**
-   - Task 4.1 – Configure AWS S3 bucket and credentials
-   - Task 4.2 – Implement frontend image picker and progress bar
-   - Task 4.3 – Connect frontend to backend S3 upload API
+   - Task 4.1 – Add “Mark as Returned” button to admin item view
+   - Task 4.2 – Update item status in database on click
+   - Task 4.3 – Hide returned items from public user list
 
-5. **[Connect and Store Data on DigitalOcean PostgreSQL](./user_stories/user_story_digitalocean_storage.md)**  
+5. **[Upload Item Image to AWS S3](./user_stories/user_story_aws_s3_upload.md)**  
    *Priority:* Medium (5), *Estimate:* 2 days  
    **Tasks:**
-   - Task 5.1 – Provision managed PostgreSQL instance on DigitalOcean
-   - Task 5.2 – Configure backend to connect using secured credentials
-   - Task 5.3 – Migrate existing schema and test database operations
-
+   - Task 5.1 – Configure AWS S3 bucket and credentials
+   - Task 5.2 – Implement frontend image picker and progress bar
+   - Task 5.3 – Connect frontend to backend S3 upload API
+  
 ---
 
 ### Burn Down for iteration-2:
