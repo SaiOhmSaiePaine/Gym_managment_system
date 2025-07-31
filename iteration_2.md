@@ -5,7 +5,7 @@
 
 ---
 
-### ✅ Checklist:
+### Checklist:
 1. GitHub entry timestamps: ✔️ Confirmed  
 2. User stories are correct: ✔️ Reviewed and prioritized  
 
@@ -17,7 +17,7 @@
 
 ---
 
-### 📌 User Stories and Tasks:
+### User Stories and Tasks:
 
 1. **[User Authentication (JWT-based)](./user_stories/user_story_user_authentication.md)** *Priority:* High (1), *Estimate:* 3 days  
 2. **[Admin Login and Dashboard](./user_stories/user_story_admin_login_dashboard.md)** *Priority:* High (2), *Estimate:* 3 days  
@@ -27,11 +27,11 @@
 
 ---
 
-### ⚠️ In Progress:
+### In Progress:
 
 ---
 
-### ✅ Completed:
+### Completed:
 
 1. **[User Authentication (JWT-based)](./user_stories/user_story_user_authentication.md)**  
    *Priority:* High (1), *Estimate:* 3 days  
@@ -70,7 +70,7 @@
 
 ---
 
-### 📉 Burn Down for iteration-2:
+### Burn Down for iteration-2:
 - 3 weeks left: 10 days of estimated work remaining  
 - 2 weeks left: 6 days of estimated work remaining  
 - 1 week left: 3 days of estimated work remaining  
