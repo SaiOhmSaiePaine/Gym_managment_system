@@ -371,7 +371,8 @@ Once setup is complete, you'll have a **production-ready** Lost & Found Campus a
 
 Our design assets and project documentation are available on Figma. This includes key UI/UX prototypes and essential diagrams used throughout development.
 
-[🔗 View the Complete Figma Workspace]([https://www.figma.com/your-figma-link-here](https://www.figma.com/design/pnSc3hQ3Hnj582Fi5I6Izc/Advenced-Software-Project?node-id=0-1&t=opU5IjUV8G3EgwZa-1))
+[🔗 View the Complete Figma Workspace](https://www.figma.com/design/pnSc3hQ3Hnj582Fi5I6Izc/Advenced-Software-Project?node-id=0-1&t=opU5IjUV8G3EgwZa-1)
+
 
 ### 📊 Included Visual Assets
 - **Iteration 1 Burn-down Chart**
