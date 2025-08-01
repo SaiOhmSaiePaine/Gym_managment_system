@@ -5,7 +5,7 @@
 
 ---
 
-### ✅ Checklist:
+### Checklist:
 1. GitHub entry timestamps: ✔️ Confirmed  
 2. User stories are correct: ✔️ Reviewed and prioritized
 
@@ -17,18 +17,18 @@
 
 ---
 
-### 🔖 User Stories and Tasks:
+### User Stories and Tasks:
 1. **[Post a Found Item](./user_stories/user_story_post_found_item.md)** *Priority:* High (1), *Estimate:* 4 days
 2. **[View and Search Found Items](./user_stories/user_story_view_search_items.md)** *Priority:* High (2), *Estimate:* 4 days
 3. **[Filter Found Items by Status](./user_stories/user_story_filter_items.md)** *Priority:* Medium (4), *Estimate:* 2 days
 
 ---
 
-### 🚧 In Progress:
+### In Progress:
 
 ---
 
-### ✅ Completed:
+### Completed:
 1. **[Post a Found Item](./user_stories/user_story_post_found_item.md)**  
    *Priority:* High (1), *Estimate:* 4 days  
    **Tasks:**
@@ -53,7 +53,7 @@
 
 ---
 
-### 📉 Burn Down for iteration-1:
+### Burn Down for iteration-1:
 - 4 weeks left: 10 days of estimated work remaining  
 - 3 weeks left: 6 days of estimated work remaining 
 - 2 weeks left: 4 days of estimated work remaining  
