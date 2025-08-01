@@ -17,6 +17,8 @@ The Lost & Found Campus system is a comprehensive web application designed to fa
 ### Database Design
 
 #### Entity Relationship Diagram (ERD)
+![Lost & Found ERD diagram](images/lost_found_erd_diagram.png)
+
 The database schema consists of the following core entities:
 
 - **Users**: Student and staff accounts with role-based access control
@@ -49,8 +51,15 @@ The database schema consists of the following core entities:
 - Implemented basic HTTP server infrastructure
 - Created initial JSON-based data storage
 - Developed core React components
+  
+#### Burndown Chart
+![Iteration 1 Burndown Chart](images/iteration_1_burndown_chart.png)
+
+#### Velocity Chart
+![Iteration 1 Velocity Chart](images/iteration_1_velocity_chart.png)
 
 **Team Velocity:** 10 task-days completed (100% of estimated work)
+
 
 ### Iteration 2 - Advanced Features (July 2 - July 29, 2025)
 
@@ -69,7 +78,14 @@ The database schema consists of the following core entities:
 - Created comprehensive admin interface
 - Added audit logging and notification systems
 
+#### Burndown Chart
+![Iteration 1 Burndown Chart](images/iteration_2_burndown_chart.png)
+
+#### Velocity Chart
+![Iteration 1 Velocity Chart](images/iteration_2_velocity_chart.png)
+
 **Team Velocity:** 18 task-days completed (100% of estimated work)
+
 
 ## System Features
 
