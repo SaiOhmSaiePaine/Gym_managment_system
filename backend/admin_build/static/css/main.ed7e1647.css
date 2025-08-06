@@ -1,0 +1,338 @@
+/* Google Fonts Import */
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap);
+
+/* CSS Custom Properties (Variables) */
+:root {
+    /* Primary Colors */
+    --primary-blue: #2563eb;
+    --primary-blue-light: #3b82f6;
+    --primary-blue-dark: #1d4ed8;
+    
+    /* Gray Scale */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    
+    /* Status Colors */
+    --status-found: #10b981;
+    --status-lost: #ef4444;
+    --status-returned: #6366f1;
+    
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+}
+
+/* Base Styles */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f9fafb;
+    background-color: var(--gray-50);
+    color: #111827;
+    color: var(--gray-900);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
+    line-height: 1.5;
+    margin: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    background: var(--gray-300);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+    background: var(--gray-400);
+}
+
+/* Material-UI Button Overrides */
+.MuiButton-root {
+    border-radius: 6px !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: none !important;
+    font-family: Inter, sans-serif !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    transition: all .15s ease !important;
+}
+
+.MuiButton-contained {
+    background-color: #2563eb !important;
+    background-color: var(--primary-blue) !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+.MuiButton-contained:hover {
+    background-color: #1d4ed8 !important;
+    background-color: var(--primary-blue-dark) !important;
+    box-shadow: 0 1px 3px #0000001a !important;
+}
+
+.MuiButton-outlined {
+    background-color: #fff !important;
+    border: 1px solid #d1d5db !important;
+    border: 1px solid var(--gray-300) !important;
+    color: #374151 !important;
+    color: var(--gray-700) !important;
+}
+
+.MuiButton-outlined:hover {
+    background-color: #f9fafb !important;
+    background-color: var(--gray-50) !important;
+    border-color: #9ca3af !important;
+    border-color: var(--gray-400) !important;
+}
+
+.MuiButton-text {
+    color: #2563eb !important;
+    color: var(--primary-blue) !important;
+}
+
+.MuiButton-text:hover {
+    background-color: #2563eb0a !important;
+}
+
+/* Material-UI Input Overrides */
+.MuiOutlinedInput-root {
+    background-color: #fff !important;
+    border-radius: 6px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: Inter, sans-serif !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border-color: #d1d5db !important;
+    border-color: var(--gray-300) !important;
+    border-width: 1px !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #9ca3af !important;
+    border-color: var(--gray-400) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #2563eb !important;
+    border-color: var(--primary-blue) !important;
+    border-width: 2px !important;
+}
+
+/* Material-UI Select Overrides */
+.MuiSelect-root {
+    background-color: #fff !important;
+}
+
+.MuiMenuItem-root {
+    font-family: Inter, sans-serif !important;
+    padding: .75rem 1rem !important;
+    padding: var(--space-3) var(--space-4) !important;
+}
+
+.MuiMenuItem-root:hover {
+    background-color: #f9fafb !important;
+    background-color: var(--gray-50) !important;
+}
+
+.MuiMenuItem-root.Mui-selected {
+    background-color: #2563eb14 !important;
+    color: #2563eb !important;
+    color: var(--primary-blue) !important;
+}
+
+/* Custom Card Component */
+.clean-card {
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: 8px !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: none !important;
+    transition: all .15s ease !important;
+}
+
+.clean-card:hover {
+    border-color: #d1d5db !important;
+    border-color: var(--gray-300) !important;
+    box-shadow: 0 1px 3px #0000001a !important;
+}
+
+/* Status Indicator Component */
+.status-indicator {
+    align-items: center !important;
+    display: inline-flex !important;
+    font-size: .875rem !important;
+    font-weight: 500 !important;
+    gap: .5rem !important;
+    gap: var(--space-2) !important;
+}
+
+.status-indicator:before {
+    border-radius: 50%;
+    content: "";
+    height: 8px;
+    width: 8px;
+}
+
+.status-found:before {
+    background-color: #10b981;
+    background-color: var(--status-found);
+}
+
+.status-lost:before {
+    background-color: #ef4444;
+    background-color: var(--status-lost);
+}
+
+.status-returned:before {
+    background-color: #6366f1;
+    background-color: var(--status-returned);
+}
+
+/* Material-UI Chip Overrides */
+.MuiChip-root {
+    border-radius: 4px !important;
+    border-radius: var(--radius-sm) !important;
+    font-family: Inter, sans-serif !important;
+    font-size: .75rem !important;
+    font-weight: 500 !important;
+    height: 24px !important;
+}
+
+.MuiChip-outlined {
+    background-color: initial !important;
+    border-color: #d1d5db !important;
+    border-color: var(--gray-300) !important;
+    color: #4b5563 !important;
+    color: var(--gray-600) !important;
+}
+
+/* Material-UI Icon Button Overrides */
+.MuiIconButton-root {
+    border-radius: 6px !important;
+    border-radius: var(--radius-md) !important;
+    color: #6b7280 !important;
+    color: var(--gray-500) !important;
+    transition: all .15s ease !important;
+}
+
+.MuiIconButton-root:hover {
+    background-color: #f3f4f6 !important;
+    background-color: var(--gray-100) !important;
+    color: #374151 !important;
+    color: var(--gray-700) !important;
+}
+
+/* Material-UI Pagination Overrides */
+.MuiPaginationItem-root {
+    background-color: #fff !important;
+    border: 1px solid #d1d5db !important;
+    border: 1px solid var(--gray-300) !important;
+    border-radius: 6px !important;
+    border-radius: var(--radius-md) !important;
+    color: #4b5563 !important;
+    color: var(--gray-600) !important;
+    font-family: Inter, sans-serif !important;
+    font-weight: 500 !important;
+}
+
+.MuiPaginationItem-root:hover {
+    background-color: #f9fafb !important;
+    background-color: var(--gray-50) !important;
+    border-color: #9ca3af !important;
+    border-color: var(--gray-400) !important;
+}
+
+.MuiPaginationItem-root.Mui-selected {
+    background-color: #2563eb !important;
+    background-color: var(--primary-blue) !important;
+    border-color: #2563eb !important;
+    border-color: var(--primary-blue) !important;
+    color: #fff !important;
+}
+
+/* Material-UI Progress Indicator Overrides */
+.MuiCircularProgress-root {
+    color: #2563eb !important;
+    color: var(--primary-blue) !important;
+}
+
+/* Material-UI Alert Overrides */
+.MuiAlert-root {
+    border: 1px solid #e5e7eb !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: 6px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: Inter, sans-serif !important;
+}
+
+/* Material-UI Typography Overrides */
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+    color: #111827 !important;
+    color: var(--gray-900) !important;
+    font-family: Inter, sans-serif !important;
+}
+
+.MuiTypography-body1,
+.MuiTypography-body2 {
+    color: #374151 !important;
+    color: var(--gray-700) !important;
+    font-family: Inter, sans-serif !important;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 600px) {
+    .MuiButton-root,
+    .MuiIconButton-root {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+    
+    .MuiOutlinedInput-input {
+        padding: 14px !important;
+    }
+}
+
+/*# sourceMappingURL=main.ed7e1647.css.map*/
