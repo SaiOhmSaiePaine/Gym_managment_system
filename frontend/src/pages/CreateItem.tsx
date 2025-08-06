@@ -16,9 +16,9 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { ArrowBack, Add, CloudUpload } from '@mui/icons-material';
-import { ItemStatus, ItemCategory } from '../types/item';
+import { ItemStatus, ItemCategory, ItemCustodyStatus } from '../types/item';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
+import api from '../util/api';
 
 const CreateItem = () => {
   const navigate = useNavigate();
@@ -44,6 +44,7 @@ const CreateItem = () => {
     location_found: '',
     date_found: new Date().toISOString().split('T')[0], // Today's date
     image_url: '',
+    custody_status: ItemCustodyStatus.KEPT_BY_FINDER, // Default to kept by finder
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -95,7 +96,10 @@ const CreateItem = () => {
   const validateForm = () => {
     const errors: Record<string, string> = {};
     
-    // Title is optional - if empty, we'll auto-generate from description
+    // Title is now required
+    if (!formData.title.trim()) {
+      errors.title = 'Title is required';
+    }
     
     if (!formData.description.trim()) {
       errors.description = 'Description is required';
@@ -107,6 +111,11 @@ const CreateItem = () => {
     
     if (!formData.date_found) {
       errors.date_found = 'Date is required';
+    }
+    
+    // Validate custody status for found items
+    if (formData.status === ItemStatus.FOUND && !formData.custody_status) {
+      errors.custody_status = 'Please specify what you did with the found item';
     }
     
     setFormErrors(errors);
@@ -125,31 +134,22 @@ const CreateItem = () => {
     setError(null);
 
     try {
-      // Auto-generate title from description if title is empty
-      let finalTitle = formData.title.trim();
-      if (!finalTitle && formData.description.trim()) {
-        // Take first 50 characters of description as title
-        finalTitle = formData.description.trim().substring(0, 50);
-        if (formData.description.length > 50) {
-          finalTitle += '...';
-        }
-      }
-      if (!finalTitle) {
-        finalTitle = formData.status === ItemStatus.LOST ? 'Lost Item' : 'Found Item';
-      }
+      // Use the title as provided, or let backend auto-generate if empty
+      const finalTitle = formData.title.trim();
 
       // Use different submission strategies based on whether an image is selected
       let response;
       
       if (selectedFile) {
         // Use multipart form data when image is selected
-      const submitFormData = new FormData();
+        const submitFormData = new FormData();
         submitFormData.append('title', finalTitle);
-      submitFormData.append('description', formData.description);
-      submitFormData.append('category', formData.category);
-      submitFormData.append('status', formData.status);
-      submitFormData.append('location_found', formData.location_found);
-      submitFormData.append('date_found', formData.date_found);
+        submitFormData.append('description', formData.description);
+        submitFormData.append('category', formData.category);
+        submitFormData.append('status', formData.status);
+        submitFormData.append('location_found', formData.location_found);
+        submitFormData.append('date_found', formData.date_found);
+        submitFormData.append('custody_status', formData.custody_status);
         submitFormData.append('image', selectedFile);
 
         response = await api.post('/api/items', submitFormData, {
@@ -167,10 +167,11 @@ const CreateItem = () => {
           status: formData.status,
           location: formData.location_found,
           date_found: formData.date_found,
+          custody_status: formData.custody_status,
         };
 
         response = await api.post('/api/items', jsonData, {
-        headers: {
+          headers: {
             'Content-Type': 'application/json'
           },
           timeout: 30000, // 30 second timeout for JSON submission
@@ -192,6 +193,7 @@ const CreateItem = () => {
         location_found: '',
         date_found: new Date().toISOString().split('T')[0],
         image_url: '',
+        custody_status: ItemCustodyStatus.KEPT_BY_FINDER,
       });
       setSelectedFile(null);
       setImagePreview(null);
@@ -260,11 +262,11 @@ const CreateItem = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Item Title (Optional)"
+                  label="Item Title (Required)"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   error={!!formErrors.title}
-                  helperText={formErrors.title || "Leave empty to auto-generate from description"}
+                  helperText={formErrors.title || "This field is required"}
                   placeholder="e.g., Lost iPhone 13, Found Car Keys"
                 />
               </Grid>
@@ -340,6 +342,36 @@ const CreateItem = () => {
                   }}
                 />
               </Grid>
+
+              {/* Show custody status only for found items */}
+              {formData.status === ItemStatus.FOUND && (
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel>What did you do with the item?</InputLabel>
+                    <Select
+                      value={formData.custody_status}
+                      label="What did you do with the item?"
+                      onChange={(e) => handleInputChange('custody_status', e.target.value)}
+                      error={!!formErrors.custody_status}
+                    >
+                      <MenuItem value={ItemCustodyStatus.KEPT_BY_FINDER}>
+                        Kept it to myself - I have the item with me
+                      </MenuItem>
+                      <MenuItem value={ItemCustodyStatus.HANDED_TO_ONE_STOP}>
+                        Handed to One-Stop Center - They have the item
+                      </MenuItem>
+                      <MenuItem value={ItemCustodyStatus.LEFT_WHERE_FOUND}>
+                        Left where I found it - Item is still at the location
+                      </MenuItem>
+                    </Select>
+                    {formErrors.custody_status && (
+                      <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                        {formErrors.custody_status}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
+              )}
 
               {/* File Upload Section */}
               <Grid item xs={12}>
