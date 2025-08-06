@@ -15,13 +15,15 @@ import {
   Avatar
 } from '@mui/material';
 import { ArrowBack, LocationOn, DateRange, Category, Flag, Person } from '@mui/icons-material';
-import { Item } from '../types/item';
+import { Item, ItemCustodyStatus } from '../types/item';
 import { API_BASE_URL } from '../config';
-import { getImageUrl } from '../utils/image';
+import { getImageUrl } from '../util/image';
+import { useAuth } from '../context/AuthContext';
 
 const ItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +54,11 @@ const ItemDetail: React.FC = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  // Helper function to get location from either field
+  const getLocation = (item: Item): string => {
+    return item.location_found || item.location || 'Location not specified';
   };
 
   if (loading) {
@@ -169,7 +176,7 @@ const ItemDetail: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <LocationOn sx={{ mr: 1, color: 'text.secondary' }} />
                   <Typography variant="body1">
-                    <strong>Location:</strong> {item.location_found}
+                    <strong>Location:</strong> {getLocation(item)}
                   </Typography>
                 </Box>
 
@@ -187,24 +194,94 @@ const ItemDetail: React.FC = () => {
                   </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Flag sx={{ mr: 1, color: 'text.secondary' }} />
                   <Typography variant="body1">
                     <strong>Status:</strong> {item.status}
                   </Typography>
                 </Box>
 
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  fullWidth
-                  onClick={() => {
-                    // Future: Add contact functionality
-                    alert('Contact functionality coming soon!');
-                  }}
-                >
-                  Contact {item.status === 'lost' ? 'Owner' : 'Finder'}
-                </Button>
+                {/* Show custody status for found items */}
+                {item.status === 'found' && item.custody_status && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="body1" sx={{ bgcolor: 'info.light', color: 'info.contrastText', px: 2, py: 1, borderRadius: 1 }}>
+                      <strong>Item Location:</strong> {
+                        item.custody_status === ItemCustodyStatus.KEPT_BY_FINDER ? 'With Finder' :
+                        item.custody_status === ItemCustodyStatus.HANDED_TO_ONE_STOP ? 'At One-Stop Center' :
+                        'Left at Original Location'
+                      }
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Only show contact button if current user is not the item reporter */}
+                {currentUser && currentUser.id !== item.user_id ? (
+                  // For found items, show different contact options based on custody status
+                  item.status === 'found' && item.custody_status ? (
+                    item.custody_status === ItemCustodyStatus.KEPT_BY_FINDER ? (
+                      <Button 
+                        variant="contained" 
+                        color="primary" 
+                        fullWidth
+                        onClick={() => {
+                          // Future: Add contact functionality
+                          alert('Contact finder - they have the item with them!');
+                        }}
+                      >
+                        Contact Finder
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        fullWidth
+                        onClick={() => {
+                          // Future: Add admin contact functionality
+                          const location = item.custody_status === ItemCustodyStatus.HANDED_TO_ONE_STOP 
+                            ? 'One-Stop Center' 
+                            : 'original location';
+                          alert(`Contact Admin - Item is at ${location}`);
+                        }}
+                      >
+                        Contact Admin
+                      </Button>
+                    )
+                  ) : (
+                    // For lost items or found items without custody status
+                    <Button 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth
+                      onClick={() => {
+                        // Future: Add contact functionality
+                        alert('Contact functionality coming soon!');
+                      }}
+                    >
+                      Contact {item.status === 'lost' ? 'Owner' : 'Finder'}
+                    </Button>
+                  )
+                ) : currentUser && currentUser.id === item.user_id ? (
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: 'background.default', 
+                    borderRadius: 1, 
+                    textAlign: 'center',
+                    border: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" color="text.secondary">
+                      This is your {item.status === 'lost' ? 'lost' : 'found'} item
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Button 
+                    variant="outlined" 
+                    fullWidth
+                    disabled
+                  >
+                    Login to Contact {item.status === 'lost' ? 'Owner' : 'Finder'}
+                  </Button>
+                )}
               </Box>
             </Paper>
           </Grid>
