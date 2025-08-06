@@ -1,5 +1,6 @@
 // filepath: /Users/Linn/Documents/GitHub/example-lost-found-proj/frontend/src/App.tsx
 import React, { useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Container, AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Person as PersonIcon } from '@mui/icons-material';
 import ItemList from './pages/ItemList';
