@@ -9,14 +9,14 @@ The application is a full-stack **Lost and Found Campus System**, with cloud ima
 
 1. **Hlyan Wint Aung**  
    - Frontend Development  
-   - Data Management
-   - Database & API Integration   
+   - Database & API Integration
+   - Cloud Integration (AWS S3) 
 
 2. **Linn Thant Soe Wai**  
-   - Backend Development  
-   - Cloud Integration (AWS S3)  
+   - Backend Development 
    - Admin Panel
-   - UI/UX Design (Figma) 
+   - UI/UX Design (Figma)
+   - Data Management
 
 3. **Sai Ohm Saie Paine**  
    - Frontend Development  
