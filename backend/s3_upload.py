@@ -18,8 +18,8 @@ AWS_REGION = os.getenv('AWS_REGION', 'ap-southeast-1')
 
 # ======= SAFETY CHECK =======
 if not all([AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET_NAME]):
-    print("⚠️  AWS credentials not found in environment variables.")
-    print("💡 Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_S3_BUCKET_NAME in your .env file")
+    print("WARNING - AWS credentials not found in environment variables.")
+    print("INFO - Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_S3_BUCKET_NAME in your .env file")
     # Don't exit, just disable S3 functionality
     s3_client = None
 else:
@@ -31,9 +31,9 @@ else:
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
             region_name=AWS_REGION
         )
-        print("✅ S3 client initialized successfully")
+        print("SUCCESS - S3 client initialized successfully")
     except Exception as e:
-        print(f"❌ Failed to initialize S3 client: {e}")
+        print(f"ERROR - Failed to initialize S3 client: {e}")
         s3_client = None
 
 
@@ -72,51 +72,51 @@ def upload_file_to_s3(file_data, original_filename, content_type=None):
         )
 
         file_url = f"https://{AWS_S3_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{unique_key}"
-        print(f"✅ File uploaded: {file_url}")
+        print(f"SUCCESS - File uploaded: {file_url}")
         return file_url
 
     except (NoCredentialsError, PartialCredentialsError) as e:
-        print(f"❌ Credential Error: {e}")
+        print(f"ERROR - Credential Error: {e}")
         raise
     except ClientError as e:
-        print(f"❌ S3 Error: {e}")
+        print(f"ERROR - S3 Error: {e}")
         raise
     except Exception as e:
-        print(f"❌ Unexpected Error: {e}")
+        print(f"ERROR - Unexpected Error: {e}")
         raise
 
 
 def test_s3_connection():
     """Test S3 connection by checking bucket access."""
     if s3_client is None:
-        print("❌ S3 client not initialized")
+        print("ERROR - S3 client not initialized")
         return False
     
     try:
         s3_client.head_bucket(Bucket=AWS_S3_BUCKET_NAME)
-        print(f"✅ S3 Bucket accessible: {AWS_S3_BUCKET_NAME}")
+        print(f"SUCCESS - S3 Bucket accessible: {AWS_S3_BUCKET_NAME}")
         return True
     except ClientError as e:
         error_code = e.response['Error']['Code']
         if error_code == '403':
-            print(f"❌ S3 connection failed: Access denied to bucket '{AWS_S3_BUCKET_NAME}'")
-            print("💡 This usually means:")
+            print(f"ERROR - S3 connection failed: Access denied to bucket '{AWS_S3_BUCKET_NAME}'")
+            print("INFO - This usually means:")
             print("   - The bucket exists but your AWS user doesn't have permission")
             print("   - Check your IAM permissions for s3:GetBucketLocation and s3:ListBucket")
             print("   - Verify the bucket name is correct")
         elif error_code == '404':
-            print(f"❌ S3 connection failed: Bucket '{AWS_S3_BUCKET_NAME}' not found")
-            print("💡 This usually means:")
+            print(f"ERROR - S3 connection failed: Bucket '{AWS_S3_BUCKET_NAME}' not found")
+            print("INFO - This usually means:")
             print("   - The bucket name is incorrect")
             print("   - The bucket is in a different region")
             print("   - The bucket doesn't exist")
         else:
-            print(f"❌ S3 connection failed: {e}")
-        print("⚠️  Will use local storage as fallback")
+            print(f"ERROR - S3 connection failed: {e}")
+        print("WARNING - Will use local storage as fallback")
         return False
     except Exception as e:
-        print(f"❌ S3 connection failed: {e}")
-        print("⚠️  Will use local storage as fallback")
+        print(f"ERROR - S3 connection failed: {e}")
+        print("WARNING - Will use local storage as fallback")
         return False
 
 

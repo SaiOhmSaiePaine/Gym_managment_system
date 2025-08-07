@@ -31,10 +31,10 @@ class DatabaseManager:
         try:
             self.connection = psycopg2.connect(**DB_CONFIG)
             self.cursor = self.connection.cursor(cursor_factory=RealDictCursor)
-            print("✅ Connected to PostgreSQL database")
+            print("SUCCESS - Connected to PostgreSQL database")
             return True
         except psycopg2.Error as e:
-            print(f"❌ Error connecting to PostgreSQL: {e}")
+            print(f"ERROR - Error connecting to PostgreSQL: {e}")
             return False
     
     def disconnect(self):
@@ -43,7 +43,7 @@ class DatabaseManager:
             self.cursor.close()
         if self.connection:
             self.connection.close()
-        print("🔒 Database connection closed")
+        print("INFO - Database connection closed")
     
     def execute_query(self, query, params=None):
         """Execute a query and return results"""
@@ -57,7 +57,7 @@ class DatabaseManager:
                 return []
         except psycopg2.Error as e:
             self.connection.rollback()
-            print(f"❌ Query error: {e}")
+            print(f"ERROR - Query error: {e}")
             raise e
     
     def execute_insert(self, query, params=None):
@@ -68,7 +68,7 @@ class DatabaseManager:
             return self.cursor.fetchone()
         except psycopg2.Error as e:
             self.connection.rollback()
-            print(f"❌ Insert error: {e}")
+            print(f"ERROR - Insert error: {e}")
             raise e
 
 def create_database_tables():
@@ -213,21 +213,21 @@ def create_database_tables():
             """
             db.execute_query(insert_category, (name, description))
         
-        print("✅ All database tables created successfully!")
+        print("SUCCESS - All database tables created successfully!")
         return True
         
     except Exception as e:
-        print(f"❌ Error creating tables: {e}")
+        print(f"ERROR - Error creating tables: {e}")
         return False
     finally:
         db.disconnect()
 
 if __name__ == "__main__":
-    print("🗄️  Setting up PostgreSQL database...")
+    print("DATABASE - Setting up PostgreSQL database...")
     
     if create_database_tables():
         print("🎉 Database setup complete - Clean start with no sample data!")
         print("📂 Default categories have been created")
         print("👥 Ready for new user registrations")
     else:
-        print("❌ Database setup failed!") 
+        print("ERROR - Database setup failed!") 

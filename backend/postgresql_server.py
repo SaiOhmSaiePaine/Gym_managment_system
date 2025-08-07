@@ -23,9 +23,9 @@ load_dotenv()
 try:
     from s3_upload import upload_file_to_s3, test_s3_connection
     S3_AVAILABLE = True
-    print("📦 S3 upload module loaded successfully")
+    print("S3 upload module loaded successfully")
 except ImportError as e:
-    print(f"⚠️  S3 upload module not available: {e}")
+    print(f"WARNING: S3 upload module not available: {e}")
     S3_AVAILABLE = False
     def upload_file_to_s3(*args, **kwargs):
         raise NotImplementedError("S3 upload not available")
@@ -123,7 +123,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_cors_response(404, {'error': 'Not found'})
         except Exception as e:
-            print(f"❌ GET Error: {e}")
+            print(f"ERROR - GET: {e}")
             self.send_cors_response(500, {'error': 'Internal server error'})
     
     def handle_get_items(self, query_params):
@@ -202,7 +202,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, response)
             
         except Exception as e:
-            print(f"❌ Error getting items: {e}")
+            print(f"ERROR - Error getting items: {e}")
             self.send_cors_response(500, {'error': 'Failed to get items'})
         finally:
             self.db.disconnect()
@@ -241,7 +241,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, item)
             
         except Exception as e:
-            print(f"❌ Error getting item: {e}")
+            print(f"ERROR - Error getting item: {e}")
             self.send_cors_response(500, {'error': 'Failed to get item'})
         finally:
             self.db.disconnect()
@@ -271,7 +271,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, response)
             
         except Exception as e:
-            print(f"❌ Error getting categories: {e}")
+            print(f"ERROR - Error getting categories: {e}")
             self.send_cors_response(500, {'error': 'Failed to get categories'})
         finally:
             self.db.disconnect()
@@ -296,7 +296,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_cors_response(404, {'error': 'Not found'})
         except Exception as e:
-            print(f"❌ POST Error: {e}")
+            print(f"ERROR - POST Error: {e}")
             self.send_cors_response(500, {'error': 'Internal server error'})
     
     def handle_create_item(self):
@@ -375,7 +375,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_cors_response(500, {'error': 'Failed to create item'})
         
         except Exception as e:
-            print(f"❌ Error creating item: {e}")
+            print(f"ERROR - Error creating item: {e}")
             self.send_cors_response(500, {'error': 'Failed to create item'})
         finally:
             self.db.disconnect()
@@ -408,11 +408,11 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             file_data = None
             filename = None
             
-            print(f"🔍 Parsing multipart form with {len(form.keys())} fields")
+            print(f"DEBUG - Parsing multipart form with {len(form.keys())} fields")
             
             for field_name in form.keys():
                 field = form[field_name]
-                print(f"🏷️  Processing field: '{field_name}'")
+                print(f"LABEL - Processing field: '{field_name}'")
                 
                 if field.filename:  # This is a file field
                     filename = field.filename
@@ -421,7 +421,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 else:  # This is a regular form field
                     value = field.value if hasattr(field, 'value') else ''
                     item_data[field_name] = value
-                    print(f"✅ Field '{field_name}': '{value}'")
+                    print(f"SUCCESS - Field '{field_name}': '{value}'")
 
             # Handle image upload with S3 PRIORITY and local backup
             image_url = None
@@ -434,12 +434,12 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                     try:
                         image_url = upload_file_to_s3(file_data, filename)
                         if image_url:  # S3 upload successful
-                            print(f"✅ Image uploaded to S3: {image_url}")
+                            print(f"SUCCESS - Image uploaded to S3: {image_url}")
                             s3_success = True
                         else:
-                            print("⚠️  S3 upload returned None, trying local backup...")
+                            print("WARNING - S3 upload returned None, trying local backup...")
                     except Exception as e:
-                        print(f"⚠️  S3 upload failed: {e}, falling back to local storage...")
+                        print(f"WARNING - S3 upload failed: {e}, falling back to local storage...")
                 
                 # BACKUP: Use local storage only if S3 failed or unavailable
                 if not s3_success:
@@ -455,10 +455,10 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                             f.write(file_data)
                         
                         image_url = f"/uploads/{unique_filename}"
-                        print(f"✅ Image saved locally as backup: {image_url}")
+                        print(f"SUCCESS - Image saved locally as backup: {image_url}")
                         
                     except Exception as e:
-                        print(f"❌ Local storage backup also failed: {e}")
+                        print(f"ERROR - Local storage backup also failed: {e}")
                         image_url = None
             else:
                 print("📝 Creating item without image")
@@ -470,8 +470,8 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             category = item_data.get('category', 'other')
             
             # Debug: Print what we received
-            print(f"🔍 Received form data: {item_data}")
-            print(f"🏷️  Title received: '{title}'")
+            print(f"DEBUG - Received form data: {item_data}")
+            print(f"LABEL - Title received: '{title}'")
             print(f"📝 Description received: '{description}'")
             
             # Validate that title is provided since frontend requires it
@@ -516,19 +516,19 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 if result:
                     response = dict(result)
                     response['user_name'] = user['name']
-                    print(f"✅ Created item with image: {title} (ID: {item_id})")
+                    print(f"SUCCESS - Created item with image: {title} (ID: {item_id})")
                     self.send_cors_response(201, response)
                 else:
                     self.send_cors_response(500, {'error': 'Failed to create item'})
             
             except Exception as e:
-                print(f"❌ Error creating item: {e}")
+                print(f"ERROR - Error creating item: {e}")
                 self.send_cors_response(500, {'error': 'Failed to create item'})
             finally:
                 self.db.disconnect()
                 
         except Exception as e:
-            print(f"❌ Error parsing multipart data: {e}")
+            print(f"ERROR - Error parsing multipart data: {e}")
             import traceback
             traceback.print_exc()
             self.send_cors_response(500, {'error': 'Failed to parse form data'})
@@ -586,7 +586,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_cors_response(500, {'error': 'Failed to create user'})
         
         except Exception as e:
-            print(f"❌ Error registering user: {e}")
+            print(f"ERROR - Error registering user: {e}")
             self.send_cors_response(500, {'error': 'Registration failed'})
         finally:
             self.db.disconnect()
@@ -628,7 +628,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, response)
         
         except Exception as e:
-            print(f"❌ Error logging in: {e}")
+            print(f"ERROR - Error logging in: {e}")
             self.send_cors_response(500, {'error': 'Login failed'})
         finally:
             self.db.disconnect()
@@ -745,7 +745,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_cors_response(500, {'error': 'Failed to create claim'})
         
         except Exception as e:
-            print(f"❌ Error handling claim: {e}")
+            print(f"ERROR - Error handling claim: {e}")
             self.send_cors_response(500, {'error': 'Failed to process claim'})
         finally:
             self.db.disconnect()
@@ -782,10 +782,10 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             </style>
         </head>
         <body>
-            <h1>🔍 Lost & Found Campus API with PostgreSQL</h1>
+            <h1>DEBUG - Lost & Found Campus API with PostgreSQL</h1>
             <p>Enhanced API server running with PostgreSQL database</p>
             
-            <h2>📡 API Endpoints:</h2>
+            <h2>API - API Endpoints:</h2>
             <div class="endpoint"><strong>GET /api/items</strong> - Get all items (with search & pagination)</div>
             <div class="endpoint"><strong>GET /api/items/{id}</strong> - Get single item</div>
             <div class="endpoint"><strong>POST /api/items</strong> - Create new item (requires auth)</div>
@@ -794,20 +794,20 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             <div class="endpoint"><strong>POST /api/users/login</strong> - User login</div>
             <div class="endpoint"><strong>GET /api/users/me</strong> - Get current user (requires auth)</div>
             
-            <h2>🗄️ Database Status:</h2>
-            <p>✅ Connected to PostgreSQL database</p>
-            <p>📊 Tables: users, items, categories, claims, notifications, audit_logs</p>
+            <h2>DATABASE - Database Status:</h2>
+            <p>SUCCESS - Connected to PostgreSQL database</p>
+            <p>STATS - Tables: users, items, categories, claims, notifications, audit_logs</p>
             
-            <h2>🚀 Features:</h2>
+            <h2>Features:</h2>
             <ul>
-                <li>✅ PostgreSQL database with proper relationships</li>
-                <li>✅ JWT authentication</li>
-                <li>✅ Advanced search and filtering</li>
-                <li>✅ Image upload support</li>
-                <li>✅ User management</li>
-                <li>✅ Audit logging</li>
-                <li>✅ Claims management</li>
-                <li>✅ Notifications system</li>
+                <li>SUCCESS - PostgreSQL database with proper relationships</li>
+                <li>SUCCESS - JWT authentication</li>
+                <li>SUCCESS - Advanced search and filtering</li>
+                <li>SUCCESS - Image upload support</li>
+                <li>SUCCESS - User management</li>
+                <li>SUCCESS - Audit logging</li>
+                <li>SUCCESS - Claims management</li>
+                <li>SUCCESS - Notifications system</li>
             </ul>
         </body>
         </html>
@@ -827,7 +827,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_cors_response(404, {'error': 'Not found'})
         except Exception as e:
-            print(f"❌ PUT Error: {e}")
+            print(f"ERROR - PUT Error: {e}")
             self.send_cors_response(500, {'error': 'Internal server error'})
 
     def do_DELETE(self):
@@ -845,7 +845,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_cors_response(404, {'error': 'Not found'})
         except Exception as e:
-            print(f"❌ DELETE Error: {e}")
+            print(f"ERROR - DELETE Error: {e}")
             self.send_cors_response(500, {'error': 'Internal server error'})
 
     def handle_update_item(self, item_id):
@@ -860,7 +860,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 post_data = self.rfile.read(content_length)
                 update_data = json.loads(post_data.decode('utf-8'))
                 
-                print(f"🔍 Admin updating item {item_id} with data: {update_data}")
+                print(f"DEBUG - Admin updating item {item_id} with data: {update_data}")
                 
                 # Build update query with all possible admin-updateable fields
                 fields = []
@@ -892,32 +892,32 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                     
                     query = f"UPDATE items SET {', '.join(fields)} WHERE id = %s RETURNING id, title, status, admin_notes"
                     
-                    print(f"🔍 Executing query: {query}")
-                    print(f"🔍 With values: {values}")
+                    print(f"DEBUG - Executing query: {query}")
+                    print(f"DEBUG - With values: {values}")
                     
                     result = self.db.execute_query(query, values)
                     
                     if result and len(result) > 0:
                         updated_item = result[0]
-                        print(f"✅ Item updated successfully: {updated_item}")
+                        print(f"SUCCESS - Item updated successfully: {updated_item}")
                         self.send_cors_response(200, {
                             'message': 'Item updated successfully',
                             'item': dict(updated_item)
                         })
                     else:
-                        print(f"❌ No item found with id: {item_id}")
+                        print(f"ERROR - No item found with id: {item_id}")
                         self.send_cors_response(404, {'error': 'Item not found'})
                 else:
-                    print(f"❌ No valid fields provided for update")
+                    print(f"ERROR - No valid fields provided for update")
                     self.send_cors_response(400, {'error': 'No valid fields to update'})
             else:
                 self.send_cors_response(400, {'error': 'No data provided'})
                 
         except json.JSONDecodeError as e:
-            print(f"❌ JSON decode error: {e}")
+            print(f"ERROR - JSON decode error: {e}")
             self.send_cors_response(400, {'error': 'Invalid JSON data'})
         except Exception as e:
-            print(f"❌ Error updating item: {e}")
+            print(f"ERROR - Error updating item: {e}")
             import traceback
             traceback.print_exc()
             self.send_cors_response(500, {'error': f'Failed to update item: {str(e)}'})
@@ -943,7 +943,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_cors_response(404, {'error': 'Item not found'})
                 
         except Exception as e:
-            print(f"❌ Error deleting item: {e}")
+            print(f"ERROR - Error deleting item: {e}")
             self.send_cors_response(500, {'error': 'Failed to delete item'})
         finally:
             self.db.disconnect()
@@ -976,7 +976,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_cors_response(400, {"error": "No credentials provided"})
         except Exception as e:
-            print(f"❌ Admin login error: {e}")
+            print(f"ERROR - Admin login error: {e}")
             self.send_cors_response(500, {"error": str(e)})
 
     def handle_get_admin_items(self, query_params):
@@ -1041,7 +1041,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, response)
             
         except Exception as e:
-            print(f"❌ Error getting admin items: {e}")
+            print(f"ERROR - Error getting admin items: {e}")
             self.send_cors_response(500, {'error': 'Failed to get admin items'})
         finally:
             self.db.disconnect()
@@ -1119,7 +1119,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(200, response)
             
         except Exception as e:
-            print(f"❌ Error getting admin users: {e}")
+            print(f"ERROR - Error getting admin users: {e}")
             self.send_cors_response(500, {'error': 'Failed to get admin users'})
         finally:
             self.db.disconnect()
@@ -1140,12 +1140,12 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 return
             
             user = dict(user_result[0])
-            print(f"🗑️ Admin deleting user: {user['name']} ({user['email']})")
+            print(f"DELETE - Admin deleting user: {user['name']} ({user['email']})")
             
             # Delete user's items first (foreign key constraint)
             items_delete_query = "DELETE FROM items WHERE user_id = %s"
             items_deleted = self.db.execute_query(items_delete_query, [user_id])
-            print(f"🗑️ Deleted {len(items_deleted) if items_deleted else 0} items for user {user_id}")
+            print(f"DELETE - Deleted {len(items_deleted) if items_deleted else 0} items for user {user_id}")
             
             # Delete the user
             user_delete_query = "DELETE FROM users WHERE id = %s RETURNING id, name, email"
@@ -1153,7 +1153,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             
             if deleted_user and len(deleted_user) > 0:
                 deleted_user_data = dict(deleted_user[0])
-                print(f"✅ User deleted successfully: {deleted_user_data}")
+                print(f"SUCCESS - User deleted successfully: {deleted_user_data}")
                 self.send_cors_response(200, {
                     'message': 'User deleted successfully',
                     'deleted_user': deleted_user_data
@@ -1162,7 +1162,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_cors_response(500, {'error': 'Failed to delete user'})
                 
         except Exception as e:
-            print(f"❌ Error deleting user: {e}")
+            print(f"ERROR - Error deleting user: {e}")
             import traceback
             traceback.print_exc()
             self.send_cors_response(500, {'error': f'Failed to delete user: {str(e)}'})
@@ -1423,7 +1423,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">🔍</div>
+            <div class="logo">LF</div>
             <h1>Lost & Found</h1>
             <p class="subtitle">Administrative Dashboard</p>
         </div>
@@ -1545,7 +1545,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                     window.API_BASE_URL = window.location.origin;
                     window.DISABLE_STATISTICS = true;
                     window.FEATURES_DISABLED = ['statistics', 'dashboard', 'stats'];
-                    console.log('🔧 Admin Mode Enabled:', {
+                    console.log('CONFIG - Admin Mode Enabled:', {
                         ADMIN_MODE: window.ADMIN_MODE,
                         API_BASE_URL: window.API_BASE_URL,
                         DISABLE_STATISTICS: window.DISABLE_STATISTICS,
@@ -1572,9 +1572,9 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                     </body>"""
                     
                     html_content = html_content.replace('</body>', delete_button_script)
-                    print(f"✅ Injected delete button functionality into admin interface")
+                    print(f"SUCCESS - Injected delete button functionality into admin interface")
                 else:
-                    print(f"⚠️  Admin modifier script not found at {modifier_script_path}")
+                    print(f"WARNING - Admin modifier script not found at {modifier_script_path}")
                 
                 self.send_response(200)
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
@@ -1583,12 +1583,12 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(html_content.encode('utf-8'))
                 
-                print(f"✅ Served React admin interface from {admin_build_path} (Statistics disabled)")
+                print(f"SUCCESS - Served React admin interface from {admin_build_path} (Statistics disabled)")
             else:
-                print(f"❌ Admin build not found at {admin_build_path}")
+                print(f"ERROR - Admin build not found at {admin_build_path}")
                 self.send_cors_response(404, {'error': 'Admin interface not found. Please run build_admin.sh first.'})
         except Exception as e:
-            print(f"❌ Error serving React admin page: {e}")
+            print(f"ERROR - Error serving React admin page: {e}")
             self.send_cors_response(500, {'error': 'Failed to serve admin interface'})
 
     def handle_react_admin_static_file(self, path):
@@ -1617,73 +1617,73 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(content)
                 
-                print(f"✅ Served React admin static file: {file_path}")
+                print(f"SUCCESS - Served React admin static file: {file_path}")
             else:
-                print(f"❌ Admin static file not found: {admin_static_path}")
+                print(f"ERROR - Admin static file not found: {admin_static_path}")
                 self.send_cors_response(404, {'error': 'Static file not found'})
         except Exception as e:
-            print(f"❌ Error serving React admin static file: {e}")
+            print(f"ERROR - Error serving React admin static file: {e}")
             self.send_cors_response(500, {'error': 'Failed to serve static file'})
 
 def main():
     """Start the PostgreSQL-powered server with AWS S3 integration"""
-    print("🗄️  Lost & Found Campus API Server with PostgreSQL & AWS S3")
+    print("DATABASE - Lost & Found Campus API Server with PostgreSQL & AWS S3")
     print("=" * 65)
     
     # Test database connection
     db = DatabaseManager()
     if db.connect():
-        print("✅ PostgreSQL database connection successful")
+        print("SUCCESS - PostgreSQL database connection successful")
         
         # Check if tables exist
         try:
             db.execute_query("SELECT COUNT(*) FROM users")
-            print("✅ Database tables are ready")
+            print("SUCCESS - Database tables are ready")
         except psycopg2.Error:
-            print("⚠️  Database tables not found. Run 'python database_config.py' to set up tables.")
+            print("WARNING - Database tables not found. Run 'python database_config.py' to set up tables.")
         
         db.disconnect()
     else:
-        print("❌ PostgreSQL database connection failed!")
+        print("ERROR - PostgreSQL database connection failed!")
         print("📋 Make sure PostgreSQL is running and database credentials are correct")
-        print("💡 Check config/database.env.example for configuration")
+        print("INFO - Check config/database.env.example for configuration")
         return
     
     # Test S3 connection
-    print("\n🔧 Testing AWS S3 connection...")
+    print("\nCONFIG - Testing AWS S3 connection...")
     if S3_AVAILABLE:
         try:
             if test_s3_connection():
-                print("✅ AWS S3 connection successful!")
+                print("SUCCESS - AWS S3 connection successful!")
                 print("📤 Images will be stored in AWS S3")
             else:
-                print("⚠️  AWS S3 connection failed - will use local storage as fallback")
+                print("WARNING - AWS S3 connection failed - will use local storage as fallback")
         except Exception as e:
-            print(f"⚠️  S3 connection error: {e} - will use local storage as fallback")
+            print(f"WARNING - S3 connection error: {e} - will use local storage as fallback")
     else:
-        print("⚠️  S3 module not available - using local storage only")
+        print("WARNING - S3 module not available - using local storage only")
     
     # Ensure upload directory exists (for fallback)
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     
     try:
         with socketserver.TCPServer(("", PORT), PostgreSQLRequestHandler) as httpd:
-            print(f"\n🚀 Server running at http://localhost:{PORT}")
+            print(f"\nSERVER - Server running at http://localhost:{PORT}")
             print(f"📱 Frontend should be available at http://localhost:3000")
-            print(f"🗄️  Database: PostgreSQL")
-            print(f"☁️  Images: {'AWS S3' if S3_AVAILABLE and test_s3_connection() else 'Local Storage'}")
+            print(f"DATABASE - Database: PostgreSQL")
+            print(f"CLOUD - Images: {'AWS S3' if S3_AVAILABLE and test_s3_connection() else 'Local Storage'}")
             print(f"📁 Upload directory: {UPLOAD_DIR}")
-            print(f"🛡️  Admin panel: http://localhost:{PORT}/admin")
-            print("💡 Press Ctrl+C to stop the server")
+            print(f"ADMIN - Admin panel: http://localhost:{PORT}/admin")
+            print("INFO - Press Ctrl+C to stop the server")
             httpd.serve_forever()
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")
     except OSError as e:
         if e.errno == 48:  # Address already in use
-            print(f"❌ Port {PORT} is already in use!")
-            print("💡 Try: lsof -i :8000 and kill existing processes")
+            print(f"ERROR - Port {PORT} is already in use!")
+            print("INFO - Try: lsof -i :8000 and kill existing processes")
         else:
-            print(f"❌ Server error: {e}")
+            print(f"ERROR - Server error: {e}")
 
 if __name__ == "__main__":
     main()
