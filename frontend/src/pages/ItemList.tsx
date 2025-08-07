@@ -354,7 +354,7 @@ const ItemList = () => {
       {/* Clean Search and Filter Bar */}
       <Paper sx={{ p: 3, mb: 3, backgroundColor: 'white', border: '1px solid var(--gray-200)' }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
             <TextField
               fullWidth
               placeholder="Search your items"
@@ -371,7 +371,7 @@ const ItemList = () => {
               }}
             />
           </Grid>
-          <Grid item xs={6} md={2}>
+          <Grid item xs={4} md={2}>
             <FormControl fullWidth size="small">
               <InputLabel>Status</InputLabel>
               <Select
@@ -388,7 +388,7 @@ const ItemList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} md={2}>
+          <Grid item xs={4} md={2}>
             <FormControl fullWidth size="small">
               <InputLabel>Category</InputLabel>
               <Select
@@ -405,12 +405,12 @@ const ItemList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} md={2}>
+          <Grid item xs={4} md={1}>
             <FormControl fullWidth size="small">
-              <InputLabel>Items per page</InputLabel>
+              <InputLabel>Per page</InputLabel>
               <Select
                 value="25"
-                label="Items per page"
+                label="Per page"
               >
                 <MenuItem value="25">25</MenuItem>
                 <MenuItem value="50">50</MenuItem>
@@ -418,45 +418,50 @@ const ItemList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} md={2}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+          <Grid item xs={12} md={2}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 1, 
+              justifyContent: { xs: 'center', md: 'flex-end' },
+              alignItems: 'center',
+              minWidth: 'fit-content',
+              width: '100%'
+            }}>
               <IconButton
                 onClick={() => setViewMode('grid')}
                 sx={{ 
-                  backgroundColor: viewMode === 'grid' ? 'var(--primary-blue)' : 'transparent',
-                  border: '1px solid var(--gray-300)',
-                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: viewMode === 'grid' ? 'primary.main' : 'white',
+                  border: '2px solid',
+                  borderColor: viewMode === 'grid' ? 'primary.main' : 'grey.300',
+                  borderRadius: 2,
+                  minWidth: 48,
+                  minHeight: 48,
+                  color: viewMode === 'grid' ? 'white' : 'grey.600',
                   '&:hover': {
-                    backgroundColor: viewMode === 'grid' ? 'var(--primary-blue-dark)' : 'var(--gray-100)'
-                  },
-                  '& .MuiSvgIcon-root': {
-                    color: viewMode === 'grid' ? 'white' : 'var(--gray-500)'
-                  },
-                  '&:hover .MuiSvgIcon-root': {
-                    color: viewMode === 'grid' ? 'white' : 'var(--gray-700)'
+                    backgroundColor: viewMode === 'grid' ? 'primary.dark' : 'grey.100',
+                    borderColor: viewMode === 'grid' ? 'primary.dark' : 'grey.400',
                   }
                 }}
               >
-                <ViewModule />
+                <ViewModule fontSize="small" />
               </IconButton>
               <IconButton
                 onClick={() => setViewMode('list')}
                 sx={{ 
-                  backgroundColor: viewMode === 'list' ? 'var(--primary-blue)' : 'transparent',
-                  border: '1px solid var(--gray-300)',
-                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: viewMode === 'list' ? 'primary.main' : 'white',
+                  border: '2px solid',
+                  borderColor: viewMode === 'list' ? 'primary.main' : 'grey.300',
+                  borderRadius: 2,
+                  minWidth: 48,
+                  minHeight: 48,
+                  color: viewMode === 'list' ? 'white' : 'grey.600',
                   '&:hover': {
-                    backgroundColor: viewMode === 'list' ? 'var(--primary-blue-dark)' : 'var(--gray-100)'
-                  },
-                  '& .MuiSvgIcon-root': {
-                    color: viewMode === 'list' ? 'white' : 'var(--gray-500)'
-                  },
-                  '&:hover .MuiSvgIcon-root': {
-                    color: viewMode === 'list' ? 'white' : 'var(--gray-700)'
+                    backgroundColor: viewMode === 'list' ? 'primary.dark' : 'grey.100',
+                    borderColor: viewMode === 'list' ? 'primary.dark' : 'grey.400',
                   }
                 }}
               >
-                <ViewList />
+                <ViewList fontSize="small" />
               </IconButton>
             </Box>
           </Grid>
