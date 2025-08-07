@@ -1564,26 +1564,15 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                     with open(modifier_script_path, 'r', encoding='utf-8') as f:
                         modifier_script = f.read()
                     
-                    # Also inject the hide settings tab script
-                    hide_settings_script_path = os.path.join(os.path.dirname(__file__), 'hide_settings_tab.js')
-                    hide_settings_script = ""
-                    if os.path.exists(hide_settings_script_path):
-                        with open(hide_settings_script_path, 'r', encoding='utf-8') as f:
-                            hide_settings_script = f.read()
-                        print(f"SUCCESS - Loaded hide settings tab script")
-                    
-                    # Inject both scripts before the closing body tag
+                    # Inject the modifier script before the closing body tag
                     combined_script = f"""
                     <script type="text/javascript">
                     {modifier_script}
                     </script>
-                    <script type="text/javascript">
-                    {hide_settings_script}
-                    </script>
                     </body>"""
                     
                     html_content = html_content.replace('</body>', combined_script)
-                    print(f"SUCCESS - Injected admin interface modifications (delete buttons + hide settings)")
+                    print(f"SUCCESS - Injected admin interface modifications (delete buttons)")
                 else:
                     print(f"WARNING - Admin modifier script not found at {modifier_script_path}")
                 
