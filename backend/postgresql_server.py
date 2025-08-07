@@ -144,6 +144,10 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             conditions = []
             params = []
             
+            # ALWAYS exclude returned items from frontend view (users should not see returned items)
+            conditions.append("status != %s")
+            params.append("returned")
+            
             if search:
                 conditions.append("(title ILIKE %s OR description ILIKE %s)")
                 params.extend([f"%{search}%", f"%{search}%"])
@@ -156,7 +160,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 conditions.append("status = %s")
                 params.append(status)
             
-            where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+            where_clause = f"WHERE {' AND '.join(conditions)}"
             
             # Get total count
             count_query = f"SELECT COUNT(*) FROM items {where_clause}"
@@ -835,6 +839,9 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             if path.startswith('/api/items/'):
                 item_id = path.split('/')[-1]
                 self.handle_delete_item(item_id)
+            elif path.startswith('/api/admin/users/'):
+                user_id = path.split('/')[-1]
+                self.handle_delete_user(user_id)
             else:
                 self.send_cors_response(404, {'error': 'Not found'})
         except Exception as e:
@@ -842,7 +849,7 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_cors_response(500, {'error': 'Internal server error'})
 
     def handle_update_item(self, item_id):
-        """Update item (for admin - change status, etc.)"""
+        """Update item (for admin - change status, notes, location, etc.)"""
         if not self.db.connect():
             self.send_cors_response(500, {'error': 'Database connection failed'})
             return
@@ -853,29 +860,67 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 post_data = self.rfile.read(content_length)
                 update_data = json.loads(post_data.decode('utf-8'))
                 
-                # Build update query
+                print(f"🔍 Admin updating item {item_id} with data: {update_data}")
+                
+                # Build update query with all possible admin-updateable fields
                 fields = []
                 values = []
                 
-                for field in ['status', 'notes', 'location_found']:
-                    if field in update_data:
-                        fields.append(f"{field} = %s")
-                        values.append(update_data[field])
+                # Map frontend field names to database field names
+                field_mapping = {
+                    'status': 'status',
+                    'notes': 'admin_notes',  # Use the new admin_notes field
+                    'admin_notes': 'admin_notes',
+                    'location_found': 'location_found',
+                    'location': 'location_found',  # Alternative field name
+                    'title': 'title',
+                    'description': 'description',
+                    'category': 'category',
+                    'custody_status': 'custody_status',
+                    'contact_info': 'contact_info'
+                }
+                
+                for frontend_field, db_field in field_mapping.items():
+                    if frontend_field in update_data and update_data[frontend_field] is not None:
+                        fields.append(f"{db_field} = %s")
+                        values.append(update_data[frontend_field])
                 
                 if fields:
+                    # Always update the updated_at timestamp
+                    fields.append("updated_at = CURRENT_TIMESTAMP")
                     values.append(item_id)
-                    query = f"UPDATE items SET {', '.join(fields)} WHERE id = %s"
-                    self.db.execute_query(query, values)
                     
-                    self.send_cors_response(200, {'message': 'Item updated successfully'})
+                    query = f"UPDATE items SET {', '.join(fields)} WHERE id = %s RETURNING id, title, status, admin_notes"
+                    
+                    print(f"🔍 Executing query: {query}")
+                    print(f"🔍 With values: {values}")
+                    
+                    result = self.db.execute_query(query, values)
+                    
+                    if result and len(result) > 0:
+                        updated_item = result[0]
+                        print(f"✅ Item updated successfully: {updated_item}")
+                        self.send_cors_response(200, {
+                            'message': 'Item updated successfully',
+                            'item': dict(updated_item)
+                        })
+                    else:
+                        print(f"❌ No item found with id: {item_id}")
+                        self.send_cors_response(404, {'error': 'Item not found'})
                 else:
+                    print(f"❌ No valid fields provided for update")
                     self.send_cors_response(400, {'error': 'No valid fields to update'})
             else:
                 self.send_cors_response(400, {'error': 'No data provided'})
                 
+        except json.JSONDecodeError as e:
+            print(f"❌ JSON decode error: {e}")
+            self.send_cors_response(400, {'error': 'Invalid JSON data'})
         except Exception as e:
             print(f"❌ Error updating item: {e}")
-            self.send_cors_response(500, {'error': 'Failed to update item'})
+            import traceback
+            traceback.print_exc()
+            self.send_cors_response(500, {'error': f'Failed to update item: {str(e)}'})
         finally:
             self.db.disconnect()
 
@@ -1076,6 +1121,51 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
         except Exception as e:
             print(f"❌ Error getting admin users: {e}")
             self.send_cors_response(500, {'error': 'Failed to get admin users'})
+        finally:
+            self.db.disconnect()
+
+    def handle_delete_user(self, user_id):
+        """Handle DELETE /api/admin/users/{id} - delete a user and all their items"""
+        if not self.db.connect():
+            self.send_cors_response(500, {'error': 'Database connection failed'})
+            return
+        
+        try:
+            # First check if user exists
+            user_query = "SELECT id, name, email FROM users WHERE id = %s"
+            user_result = self.db.execute_query(user_query, [user_id])
+            
+            if not user_result or len(user_result) == 0:
+                self.send_cors_response(404, {'error': 'User not found'})
+                return
+            
+            user = dict(user_result[0])
+            print(f"🗑️ Admin deleting user: {user['name']} ({user['email']})")
+            
+            # Delete user's items first (foreign key constraint)
+            items_delete_query = "DELETE FROM items WHERE user_id = %s"
+            items_deleted = self.db.execute_query(items_delete_query, [user_id])
+            print(f"🗑️ Deleted {len(items_deleted) if items_deleted else 0} items for user {user_id}")
+            
+            # Delete the user
+            user_delete_query = "DELETE FROM users WHERE id = %s RETURNING id, name, email"
+            deleted_user = self.db.execute_query(user_delete_query, [user_id])
+            
+            if deleted_user and len(deleted_user) > 0:
+                deleted_user_data = dict(deleted_user[0])
+                print(f"✅ User deleted successfully: {deleted_user_data}")
+                self.send_cors_response(200, {
+                    'message': 'User deleted successfully',
+                    'deleted_user': deleted_user_data
+                })
+            else:
+                self.send_cors_response(500, {'error': 'Failed to delete user'})
+                
+        except Exception as e:
+            print(f"❌ Error deleting user: {e}")
+            import traceback
+            traceback.print_exc()
+            self.send_cors_response(500, {'error': f'Failed to delete user: {str(e)}'})
         finally:
             self.db.disconnect()
 
@@ -1467,6 +1557,24 @@ class PostgreSQLRequestHandler(http.server.BaseHTTPRequestHandler):
                 
                 # Insert the config before the closing </head> tag
                 html_content = html_content.replace('</head>', f'{admin_config}</head>')
+                
+                # Inject the admin interface modifier script to replace edit buttons with delete buttons
+                modifier_script_path = os.path.join(os.path.dirname(__file__), 'admin_interface_modifier.js')
+                if os.path.exists(modifier_script_path):
+                    with open(modifier_script_path, 'r', encoding='utf-8') as f:
+                        modifier_script = f.read()
+                    
+                    # Inject the script before the closing body tag
+                    delete_button_script = f"""
+                    <script type="text/javascript">
+                    {modifier_script}
+                    </script>
+                    </body>"""
+                    
+                    html_content = html_content.replace('</body>', delete_button_script)
+                    print(f"✅ Injected delete button functionality into admin interface")
+                else:
+                    print(f"⚠️  Admin modifier script not found at {modifier_script_path}")
                 
                 self.send_response(200)
                 self.send_header('Content-Type', 'text/html; charset=utf-8')

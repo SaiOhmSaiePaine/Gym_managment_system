@@ -96,8 +96,27 @@ def test_s3_connection():
         s3_client.head_bucket(Bucket=AWS_S3_BUCKET_NAME)
         print(f"✅ S3 Bucket accessible: {AWS_S3_BUCKET_NAME}")
         return True
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+        if error_code == '403':
+            print(f"❌ S3 connection failed: Access denied to bucket '{AWS_S3_BUCKET_NAME}'")
+            print("💡 This usually means:")
+            print("   - The bucket exists but your AWS user doesn't have permission")
+            print("   - Check your IAM permissions for s3:GetBucketLocation and s3:ListBucket")
+            print("   - Verify the bucket name is correct")
+        elif error_code == '404':
+            print(f"❌ S3 connection failed: Bucket '{AWS_S3_BUCKET_NAME}' not found")
+            print("💡 This usually means:")
+            print("   - The bucket name is incorrect")
+            print("   - The bucket is in a different region")
+            print("   - The bucket doesn't exist")
+        else:
+            print(f"❌ S3 connection failed: {e}")
+        print("⚠️  Will use local storage as fallback")
+        return False
     except Exception as e:
         print(f"❌ S3 connection failed: {e}")
+        print("⚠️  Will use local storage as fallback")
         return False
 
 
