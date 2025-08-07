@@ -171,7 +171,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Setup database tables using the correct script
+# Setup database tables (clean start - no JSON migration)
 echo "🗄️  Setting up database tables..."
 python3 database_config.py
 

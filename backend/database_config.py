@@ -222,94 +222,12 @@ def create_database_tables():
     finally:
         db.disconnect()
 
-def migrate_json_to_postgresql():
-    """Migrate data from JSON files to PostgreSQL"""
-    db = DatabaseManager()
-    if not db.connect():
-        return False
-    
-    try:
-        # Migrate users
-        print("📦 Migrating users...")
-        with open('user_db.json', 'r') as f:
-            users = json.load(f)
-        
-        for user in users:
-            insert_user = """
-            INSERT INTO users (id, name, email, password_hash, created_at)
-            VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (email) DO NOTHING;
-            """
-            # Convert string ID to UUID format if needed
-            if user['id'].count('-') == 4:
-                user_id = user['id']
-            else:
-                # Generate a proper UUID for simple string IDs
-                import uuid
-                user_id = str(uuid.uuid4())
-            created_at = user.get('created_at', datetime.now().isoformat())
-            
-            db.execute_query(insert_user, (
-                user_id,
-                user['name'],
-                user['email'],
-                user['password_hash'],
-                created_at
-            ))
-        
-        # Migrate items
-        print("📦 Migrating items...")
-        with open('lost_found_db.json', 'r') as f:
-            items = json.load(f)
-        
-        for item in items:
-            insert_item = """
-            INSERT INTO items (
-                id, title, description, category, status, location_found, 
-                location, date_found, image_url, 
-                created_at, updated_at
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (id) DO NOTHING;
-            """
-            
-            # Convert string ID to UUID format if needed
-            if item['id'].count('-') == 4:
-                item_id = item['id']
-            else:
-                # Generate a proper UUID for simple string IDs
-                import uuid
-                item_id = str(uuid.uuid4())
-            
-            db.execute_query(insert_item, (
-                item_id,
-                item['title'],
-                item['description'],
-                item['category'],
-                item['status'],
-                item.get('location_found'),
-                item.get('location'),
-                item.get('date_found'),
-                item.get('image_url'),
-                item.get('created_at', datetime.now().isoformat()),
-                item.get('updated_at', datetime.now().isoformat())
-            ))
-        
-        print("✅ Data migration completed successfully!")
-        return True
-        
-    except Exception as e:
-        print(f"❌ Error during migration: {e}")
-        return False
-    finally:
-        db.disconnect()
-
 if __name__ == "__main__":
     print("🗄️  Setting up PostgreSQL database...")
     
     if create_database_tables():
-        print("🔄 Starting data migration...")
-        migrate_json_to_postgresql()
-        print("🎉 Database setup complete!")
+        print("🎉 Database setup complete - Clean start with no sample data!")
+        print("📂 Default categories have been created")
+        print("👥 Ready for new user registrations")
     else:
         print("❌ Database setup failed!") 

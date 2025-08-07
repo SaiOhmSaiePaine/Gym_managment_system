@@ -297,7 +297,7 @@ else:
     print('⚠️  AWS credentials not configured - using local storage for images')
 "
 
-# Setup database tables using the correct script
+# Setup database tables (clean start - no JSON migration)
 echo "🗄️  Setting up database tables..."
 python3 database_config.py
 
