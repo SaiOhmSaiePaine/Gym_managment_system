@@ -8,7 +8,6 @@ echo "=================================================="
 
 # Kill any existing servers first
 echo "🧹 Cleaning up existing servers..."
-# Kill any processes running on ports 3000 and 8000
 if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1; then
     echo "   🔴 Killing existing frontend server (port 3000)..."
     kill $(lsof -Pi :3000 -sTCP:LISTEN -t) 2>/dev/null || true
@@ -19,11 +18,8 @@ if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null 2>&1; then
     kill $(lsof -Pi :8000 -sTCP:LISTEN -t) 2>/dev/null || true
 fi
 
-# Kill any remaining node or python processes from previous runs
 pkill -f "npm start" 2>/dev/null || true
 pkill -f "postgresql_server.py" 2>/dev/null || true
-
-# Wait a moment for processes to terminate
 sleep 2
 echo "✅ Server cleanup complete"
 echo ""
@@ -32,21 +28,6 @@ echo ""
 if [ ! -f "README.md" ] || [ ! -d "backend" ]; then
     echo "❌ Error: Please run this script from the project root directory"
     exit 1
-fi
-
-# Create .env file if it doesn't exist
-if [ ! -f "backend/.env" ]; then
-    echo "📝 Creating .env file from template..."
-    cp backend/.env.example backend/.env
-    echo "✅ Created backend/.env from template"
-    echo "⚠️  Please edit backend/.env with your actual database credentials before running again"
-    echo ""
-    echo "Required configurations:"
-    echo "  - DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD"
-    echo "  - JWT_SECRET_KEY (generate a secure random string)"
-    echo "  - AWS credentials (optional, for image storage)"
-    echo ""
-    exit 0
 fi
 
 # Check if Python 3 is installed
@@ -74,6 +55,18 @@ if ! command -v npm &> /dev/null; then
 fi
 
 # Check if PostgreSQL is running
+echo "🔍 Checking PostgreSQL..."
+if ! command -v pg_isready &> /dev/null; then
+    echo "❌ Error: PostgreSQL is not installed"
+    echo "Please install PostgreSQL and try again"
+    echo ""
+    echo "On macOS with Homebrew:"
+    echo "  brew install postgresql"
+    echo "  brew services start postgresql"
+    echo ""
+    exit 1
+fi
+
 if ! pg_isready -h localhost -p 5432 &> /dev/null; then
     echo "❌ Error: PostgreSQL is not running on localhost:5432"
     echo "Please start PostgreSQL and try again"
@@ -82,6 +75,48 @@ if ! pg_isready -h localhost -p 5432 &> /dev/null; then
     echo "  brew services start postgresql"
     echo ""
     exit 1
+fi
+echo "✅ PostgreSQL is running"
+
+# Create database if it doesn't exist
+echo "🗄️  Setting up database..."
+createdb lost_found_campus 2>/dev/null || echo "   Database already exists, continuing..."
+
+# Get current user for PostgreSQL
+CURRENT_USER=$(whoami)
+
+# Create .env file with proper configuration
+if [ ! -f "backend/.env" ]; then
+    echo "📝 Creating .env file..."
+    cat > backend/.env << EOF
+# Database Configuration
+DB_HOST=localhost
+DB_NAME=lost_found_campus
+DB_USER=$CURRENT_USER
+DB_PASSWORD=
+DB_PORT=5432
+
+# JWT Configuration
+JWT_SECRET_KEY=your-super-secret-jwt-key-change-this-in-production-12345
+
+# AWS S3 Configuration (optional)
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=ap-southeast-1
+S3_BUCKET_NAME=lost-found-campus-photos
+
+# Application Configuration
+APP_DEBUG=True
+APP_PORT=8000
+PORT=8000
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-12345
+UPLOAD_DIR=uploads
+
+# Admin Configuration
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+EOF
+    echo "✅ Created backend/.env"
 fi
 
 # Navigate to backend directory
@@ -98,13 +133,17 @@ fi
 echo "🔧 Activating virtual environment..."
 source venv/bin/activate
 
+# Upgrade pip first
+echo "📦 Upgrading pip..."
+pip install --upgrade pip
+
 # Install requirements
 echo "📦 Installing Python dependencies..."
 pip install -r requirements.txt
 echo "✅ Dependencies installed"
 
 # Check database connection
-echo "🔍 Checking database connection..."
+echo "🔍 Testing database connection..."
 python3 -c "
 import os
 from dotenv import load_dotenv
@@ -118,7 +157,7 @@ try:
         port=os.getenv('DB_PORT'),
         database=os.getenv('DB_NAME'),
         user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD')
+        password=os.getenv('DB_PASSWORD', '')
     )
     conn.close()
     print('✅ Database connection successful')
@@ -128,35 +167,13 @@ except Exception as e:
 "
 
 if [ $? -ne 0 ]; then
-    echo "❌ Database connection failed. Please check your .env configuration"
+    echo "❌ Database connection failed. Please check your configuration"
     exit 1
 fi
 
-# Validate AWS credentials (optional)
-echo "🔐 Checking AWS configuration..."
-python3 -c "
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-aws_key = os.getenv('AWS_ACCESS_KEY_ID')
-aws_secret = os.getenv('AWS_SECRET_ACCESS_KEY')
-aws_bucket = os.getenv('AWS_S3_BUCKET_NAME')
-
-if aws_key and aws_secret and aws_bucket:
-    if aws_key.startswith('your_') or aws_secret.startswith('your_') or aws_bucket.startswith('your_'):
-        print('⚠️  AWS credentials are still using template values')
-        print('   Image uploads will be saved locally instead')
-    else:
-        print('✅ AWS credentials configured')
-else:
-    print('⚠️  AWS credentials not configured - using local storage for images')
-"
-
-# Setup database tables (smart detection)
-echo "🗄️  Intelligent database setup..."
-python3 smart_database_setup.py
+# Setup database tables using the correct script
+echo "🗄️  Setting up database tables..."
+python3 database_config.py
 
 if [ $? -ne 0 ]; then
     echo "❌ Database setup failed. Please check your configuration"
@@ -177,15 +194,24 @@ echo ""
 echo "🎨 Setting up Frontend..."
 echo "========================="
 
-# Navigate to frontend directory
 cd frontend
 
-# Install npm dependencies
+# Check for package-lock.json issues and clean if necessary
+if [ -f "package-lock.json" ]; then
+    echo "🔍 Checking npm cache..."
+    npm cache verify
+fi
+
 echo "📦 Installing frontend dependencies..."
 npm install
+if [ $? -ne 0 ]; then
+    echo "🔧 npm install failed, trying to fix..."
+    rm -rf node_modules package-lock.json
+    npm cache clean --force
+    npm install
+fi
 echo "✅ Frontend dependencies installed"
 
-# Navigate back to project root
 cd ..
 
 echo ""
@@ -197,11 +223,10 @@ echo ""
 cleanup() {
     echo ""
     echo "🛑 Shutting down servers..."
-    jobs -p | xargs -r kill
+    jobs -p | xargs -r kill 2>/dev/null || true
     exit 0
 }
 
-# Set up trap to cleanup on script exit
 trap cleanup SIGINT SIGTERM EXIT
 
 # Start backend server in background
@@ -212,7 +237,6 @@ python3 postgresql_server.py &
 BACKEND_PID=$!
 cd ..
 
-# Wait a moment for backend to start
 sleep 3
 
 # Start frontend server in background
@@ -227,9 +251,13 @@ echo "✅ Both servers are running!"
 echo "=========================="
 echo "🎨 Frontend: http://localhost:3000"
 echo "🚀 Backend:  http://localhost:8000"
+echo "🛡️  Admin Panel: http://localhost:8000/admin"
+echo ""
+echo "📋 Default Admin Credentials:"
+echo "   Username: admin"
+echo "   Password: admin123"
 echo ""
 echo "Press Ctrl+C to stop both servers"
 echo ""
 
-# Wait for both processes
 wait $BACKEND_PID $FRONTEND_PID

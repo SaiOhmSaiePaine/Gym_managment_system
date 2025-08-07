@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -14,15 +14,11 @@ import {
   Select,
   Button,
   Paper,
-  Fade,
   IconButton,
   InputAdornment,
-  List,
   ListItem,
-  ListItemText,
   Chip,
   Grid,
-  Avatar,
   Card,
   CardContent,
   CardMedia,
@@ -30,9 +26,6 @@ import {
 import { 
   Add, 
   Search, 
-  FilterList, 
-  LocationOn, 
-  CalendarToday,
   ViewList,
   ViewModule,
   ImageNotSupported
@@ -44,7 +37,7 @@ import api from '../util/api';
 
 const ItemList = () => {
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,11 +67,7 @@ const ItemList = () => {
     navigate(`/items/${itemId}`);
   };
 
-  useEffect(() => {
-    fetchItems();
-  }, [page, searchTerm, category, status]);
-
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -100,7 +89,11 @@ const ItemList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, searchTerm, category, status]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   const renderGridView = () => {
     if (items.length === 0) {

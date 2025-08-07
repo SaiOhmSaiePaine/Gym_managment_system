@@ -108,24 +108,45 @@ echo ""
 echo "🐍 Using Python: $PYTHON_CMD"
 echo ""
 
+# Create database if it doesn't exist
+echo "🗄️  Setting up database..."
+createdb lost_found_campus 2>/dev/null || echo "   Database already exists, continuing..."
+
+# Get current user for PostgreSQL
+CURRENT_USER=$(whoami)
+
 # Create .env file if it doesn't exist
 if [ ! -f "backend/.env" ]; then
-    echo "📝 Creating .env file from template..."
-    if [ -f "backend/.env.example" ]; then
-        cp backend/.env.example backend/.env
-        echo "✅ Created backend/.env from template"
-    else
-        echo "❌ Error: backend/.env.example not found"
-        exit 1
-    fi
-    echo "⚠️  Please edit backend/.env with your actual database credentials before running again"
-    echo ""
-    echo "Required configurations:"
-    echo "  - DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD"
-    echo "  - JWT_SECRET_KEY (generate a secure random string)"
-    echo "  - AWS credentials (optional, for image storage)"
-    echo ""
-    exit 0
+    echo "📝 Creating .env file..."
+    cat > backend/.env << EOF
+# Database Configuration
+DB_HOST=localhost
+DB_NAME=lost_found_campus
+DB_USER=$CURRENT_USER
+DB_PASSWORD=
+DB_PORT=5432
+
+# JWT Configuration
+JWT_SECRET_KEY=your-super-secret-jwt-key-change-this-in-production-12345
+
+# AWS S3 Configuration (optional)
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=ap-southeast-1
+S3_BUCKET_NAME=lost-found-campus-photos
+
+# Application Configuration
+APP_DEBUG=True
+APP_PORT=8000
+PORT=8000
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-12345
+UPLOAD_DIR=uploads
+
+# Admin Configuration
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+EOF
+    echo "✅ Created backend/.env"
 fi
 
 # Check if Node.js and npm are installed
@@ -276,9 +297,9 @@ else:
     print('⚠️  AWS credentials not configured - using local storage for images')
 "
 
-# Setup database tables (smart detection)
-echo "🗄️  Intelligent database setup..."
-python3 smart_database_setup.py
+# Setup database tables using the correct script
+echo "🗄️  Setting up database tables..."
+python3 database_config.py
 
 if [ $? -ne 0 ]; then
     echo "❌ Database setup failed. Please check your configuration"
@@ -358,7 +379,12 @@ echo "✅ Both servers are running!"
 echo "=========================="
 echo "🎨 Frontend: http://localhost:3000"
 echo "🚀 Backend:  http://localhost:8000"
+echo "🛡️  Admin Panel: http://localhost:8000/admin"
 echo "🐍 Using:    $PYTHON_CMD"
+echo ""
+echo "📋 Default Admin Credentials:"
+echo "   Username: admin"
+echo "   Password: admin123"
 echo ""
 echo "Press Ctrl+C to stop both servers"
 echo ""

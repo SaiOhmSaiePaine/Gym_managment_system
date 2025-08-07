@@ -7,7 +7,6 @@ import ItemList from './pages/ItemList';
 import ItemDetail from './pages/ItemDetail';
 import CreateItem from './pages/CreateItem';
 import Auth from './pages/Auth';
-import AdminRedirect from './pages/AdminRedirect';
 import AdminTest from './pages/AdminTest';
 import AuthProvider, { useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
