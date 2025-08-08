@@ -1,10 +1,10 @@
-# 🚀 Lost and Found Campus Application
+# Lost and Found Campus Application
 
 A modern, full-stack web application for managing lost and found items on campus with **Python backend** and **AWS S3 cloud storage integration**. This professional application helps students and staff efficiently report lost items and claim found items with real-time search, filtering, image upload capabilities, and complete administrative control.
 
-## ✨ Key Features
+## Key Features
 
-### 🔍 **User Features**
+### **User Features**
 - **User Authentication**: Secure JWT-based authentication with user management
 - **Real-time Search**: Advanced search with filtering capabilities
 - **Advanced Filtering**: Category-based filtering with status queries
@@ -13,28 +13,28 @@ A modern, full-stack web application for managing lost and found items on campus
 - **Responsive Design**: Mobile-first responsive design with modern UI/UX
 - **Data Persistence**: JSON-based data storage with backup capabilities
 
-### 🛡️ **Admin Panel Features**
+### **Admin Panel Features**
 - **Secure Authentication**: Role-based access control (admin/admin123)
 - **Complete Item Management**: Full CRUD operations on all items
 - **Statistics Dashboard**: Real-time analytics and item counts
 - **User Management**: View and manage registered users
 - **Data Export**: JSON-based data management and backup
 
-### 🗄️ **Database Features**
+### **Database Features**
 - **JSON Backend**: Lightweight JSON-based data storage
 - **UUID Primary Keys**: Globally unique identifiers for all entities
 - **Data Relationships**: Structured data relationships between users, items, and categories
 - **Data Backup**: Automatic JSON file backups for data safety
 - **Migration Ready**: Clean data structure ready for database migration
 
-### 🛠️ **Technical Excellence**
+### **Technical Excellence**
 - **Modern UI**: Beautiful Material-UI design with TypeScript
 - **Cloud Storage**: AWS S3 integration for reliable image hosting
 - **Professional Error Handling**: Comprehensive error boundaries and validation
 - **Testing Suite**: Jest testing with comprehensive coverage
 - **Clean Code**: ESLint compliant, well-documented, maintainable codebase
 
-## 🎯 Tech Stack
+## Tech Stack
 
 ### **Frontend**
 - **React 18** with TypeScript
@@ -53,7 +53,7 @@ A modern, full-stack web application for managing lost and found items on campus
 ### **Infrastructure**
 - **AWS S3** for secure image storage
 - **Environment variables** for secure configuration
-## 🚀 Quick Start
+## Quick Start
 
 ### **Prerequisites**
 - **PostgreSQL** (version 12+ recommended)
@@ -75,17 +75,17 @@ cd example-lost-found-proj
 ./setup.sh
 ```
 
-**That's it!** 🎉 Both scripts will:
-- ✅ Set up backend (Python virtual environment, dependencies, database)
-- ✅ Set up frontend (npm dependencies)
-- ✅ Start both servers automatically
-- ✅ Handle Python version compatibility
-- ✅ Check all prerequisites
+**That's it!** Both scripts will:
+- Set up backend (Python virtual environment, dependencies, database)
+- Set up frontend (npm dependencies)
+- Start both servers automatically
+- Handle Python version compatibility
+- Check all prerequisites
 
 ### **Access the Application**
-- 🌐 **Frontend**: http://localhost:3000
-- 🔧 **Backend API**: http://localhost:8000
-- 📊 **Admin Panel**: http://localhost:8000/admin (admin/admin123)
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **Admin Panel**: http://localhost:8000/admin (admin/admin123)
 
 ### **Quick Start (After Initial Setup)**
 ```bash
@@ -96,9 +96,9 @@ cd example-lost-found-proj
 ./setup.sh
 ```
 
-Then open **http://localhost:3000** in your browser! 🎉
+Then open **http://localhost:3000** in your browser!
 
-## 📋 Prerequisites
+## Prerequisites
 
 - **Node.js** v16+ ([Download](https://nodejs.org/))
 - **Python** 3.8+ ([Download](https://python.org/))
@@ -112,7 +112,7 @@ python3 --version # Should show v3.8+
 git --version     # Should show git version
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### **AWS S3 Setup**
 1. **Create S3 Bucket**: 
@@ -140,9 +140,9 @@ export AWS_REGION="your_region_here"  # e.g., "us-east-1"
 source venv/bin/activate
 python3 -c "from s3_config import test_s3_connection; test_s3_connection()"
 ```
-You should see: ✅ S3 connection successful!
+You should see: S3 connection successful!
 
-## 🎮 Application Access
+## Application Access
 
 - **User Frontend**: http://localhost:3000 (Main user interface)
 - **Admin Panel**: http://localhost:8000/admin (React-powered admin dashboard - admin/admin123)
@@ -154,7 +154,7 @@ You should see: ✅ S3 connection successful!
 - **Admin Interface**: Only accessible from `localhost:8000/admin` (React-based)
 - **No admin button** in the user interface for clean separation
 
-### **🎯 Admin Interface (React-Based)**
+### ** Admin Interface (React-Based)**
 The admin interface has been migrated from HTML to a full React application:
 - **AdminLogin**: Professional login component with Material-UI design
 - **AdminDashboard**: Complete dashboard with real-time statistics
@@ -162,7 +162,7 @@ The admin interface has been migrated from HTML to a full React application:
 - **Responsive Design**: Mobile-friendly Material-UI components
 - **Admin Mode Detection**: Automatically configures API calls when served from backend
 
-## 🧪 Testing the Application
+## Testing the Application
 
 ### **User Interface Testing**
 1. **Browse Items**: View all active lost/found items in beautiful responsive grid
@@ -187,9 +187,9 @@ The admin interface has been migrated from HTML to a full React application:
 4. **Navigation**: Test sticky header and responsive layout
 5. **Button Behavior**: Verify square "+" button shows icon only on mobile
 
-## 📱 Complete Feature List
+## Complete Feature List
 
-### ✅ **User Features**
+### **User Features**
 - Real-time search with debounced input
 - Advanced category and status filtering  
 - AWS S3 image upload with progress indicators
@@ -201,7 +201,7 @@ The admin interface has been migrated from HTML to a full React application:
 - Responsive grid layout (1/2/3 columns)
 - Enhanced typography and visual hierarchy
 
-### ✅ **Admin Features**  
+### **Admin Features**  
 - Secure admin authentication system
 - Complete item management dashboard
 - Real-time statistics with accurate counts
@@ -211,7 +211,7 @@ The admin interface has been migrated from HTML to a full React application:
 - Delete items functionality
 - Admin-only API endpoints
 
-### ✅ **Technical Features**
+### **Technical Features**
 - TypeScript for type safety
 - ESLint compliant code
 - Mobile-first responsive design
@@ -221,14 +221,14 @@ The admin interface has been migrated from HTML to a full React application:
 - Clean component architecture
 - Comprehensive testing setup
 
-### ✅ **Security & Data Protection**
+### **Security & Data Protection**
 - Environment variables for AWS credentials
 - Returned items hidden from public view
 - Admin-only access to sensitive operations
 - Secure S3 file uploads
 - Proper CORS configuration
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 example-lost-found-proj/
@@ -248,7 +248,7 @@ example-lost-found-proj/
 └── venv/                   # Python virtual environment
 ```
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### **Port Issues**
 ```bash
@@ -286,7 +286,7 @@ npm install
 - Test in browser dev tools with device simulation
 - Verify viewport meta tag in public/index.html
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/amazing-feature`
@@ -294,13 +294,13 @@ npm install
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📖 Documentation
+## Documentation
 
 - **[Complete Documentation](docs/DOCUMENTATION.md)**: Comprehensive setup, API, and troubleshooting guide
 - **[Database Schema](docs/DOCUMENTATION.md#database-schema)**: PostgreSQL table structure
 - **[API Reference](docs/DOCUMENTATION.md#api-documentation)**: Complete API endpoint documentation
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 example-lost-found-proj/
@@ -327,38 +327,38 @@ example-lost-found-proj/
     └── DOCUMENTATION.md         # Complete documentation
 ```
 
-## 🔒 Security Notes
+## Security Notes
 
 - **PostgreSQL**: Use strong passwords and proper user permissions in production
 - **Environment Variables**: Never commit sensitive credentials to version control
 - **Admin Access**: Change default admin credentials (admin/admin123) in production
 - **AWS S3**: Use IAM roles and least-privilege principle for S3 access
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🎉 What You Get
+## What You Get
 
 Once setup is complete, you'll have a **production-ready** Lost & Found Campus application featuring:
 
-### 🎯 **Modern Architecture**
+### **Modern Architecture**
 - **Frontend**: React with TypeScript for type safety
 - **Backend**: Python with PostgreSQL for robust data management
 - **Storage**: AWS S3 integration with local backup
 - **Authentication**: JWT-based secure authentication
 - **Database**: PostgreSQL with proper relational design
 
-### 🛡️ **Administrative Features**
+### **Administrative Features**
 - **Admin Panel**: Complete item and user management
 - **Analytics**: Real-time statistics and reporting
 - **Data Export**: SQL query capabilities for analysis
 - **User Management**: Role-based access control
 - **Data Integrity**: Foreign key relationships and constraints
 
-### 🏗️ **Production Ready**
+### **Production Ready**
 - **Scalable**: PostgreSQL database for growth
 - **Maintainable**: Clean codebase with proper documentation
 - **Secure**: Environment-based configuration
@@ -367,14 +367,14 @@ Once setup is complete, you'll have a **production-ready** Lost & Found Campus a
 
 ---
 
-## 📐 Figma Prototype
+## Figma Prototype
 
 Our design assets and project documentation are available on Figma. This includes key UI/UX prototypes and essential diagrams used throughout development.
 
 [🔗 View the Complete Figma Workspace](https://www.figma.com/design/pnSc3hQ3Hnj582Fi5I6Izc/Advenced-Software-Project?node-id=0-1&t=opU5IjUV8G3EgwZa-1)
 
 
-### 📊 Included Visual Assets
+### Included Visual Assets
 - **Iteration 1 Burn-down Chart**
 - **Iteration 2 Burn-down Chart**
 - **Iteration 1 Velocity Chart**
@@ -386,6 +386,4 @@ Our design assets and project documentation are available on Figma. This include
 
 These resources provide a comprehensive view of our project's progress, data architecture, and user interface development.
 
-**Perfect for campus deployment!** 🚀🗄️✨
-
-*Documentation Last Updated: August 1, 2025*
+**Perfect for campus deployment!**
